@@ -1,0 +1,6 @@
+# Machine-specific local configs (not tracked)
+home/.zshrc.local
+home/.gitconfig.local
+
+# macOS
+.DS_Store

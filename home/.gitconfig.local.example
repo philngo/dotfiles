@@ -1,0 +1,11 @@
+# Machine-specific git configuration
+# Copy to ~/.gitconfig.local and customize
+
+[user]
+	email = you@example.com
+
+# Example: Work-specific signing
+# [commit]
+# 	gpgsign = true
+# [user]
+# 	signingkey = ABC123

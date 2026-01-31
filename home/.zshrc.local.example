@@ -1,0 +1,12 @@
+# Machine-specific zsh configuration
+# Copy to ~/.zshrc.local and customize
+
+# Example: Work-specific paths
+# export PATH="/opt/work-tools/bin:$PATH"
+
+# Example: Machine-specific aliases
+# alias proj="cd ~/work/main-project"
+
+# Example: Work VPN helpers
+# alias vpn-up="sudo wg-quick up work"
+# alias vpn-down="sudo wg-quick down work"
