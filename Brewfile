@@ -1,5 +1,4 @@
 # Taps
-tap "homebrew/cask-fonts"
 tap "nikitabobko/tap"
 tap "FelixKratz/formulae"
 
@@ -16,17 +15,18 @@ brew "fd"
 brew "fzf"
 brew "tree"
 brew "direnv"
+brew "mise"
 brew "starship"
 brew "lua"
 brew "tree-sitter"
 brew "tree-sitter-cli"
-brew "claude-code"
 
 # Window management
 cask "nikitabobko/tap/aerospace"
 brew "borders"  # JankyBorders
 
 # Applications
+cask "claude-code"
 cask "alfred"
 cask "iterm2"
 cask "slack"
@@ -44,7 +44,6 @@ cask "font-fira-code-nerd-font"
 cask "qlcolorcode"      # syntax highlighting
 cask "qlstephen"        # plain text files without extension
 cask "qlmarkdown"       # markdown preview
-cask "quicklook-json"   # JSON preview
 cask "quicklook-csv"    # CSV preview
 cask "qlvideo"          # video thumbnails
 cask "ipynb-quicklook"  # Jupyter notebooks

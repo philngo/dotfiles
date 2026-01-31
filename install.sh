@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Idempotent install script - safe to run multiple times.
 set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -70,6 +71,12 @@ for file in "$DOTFILES_DIR"/config/*; do
     ln -sf "$file" "$target"
     echo "  Linked .config/$filename"
 done
+
+# Install mise-managed tools (node, etc.)
+if command -v mise &> /dev/null; then
+    echo "Installing mise tools..."
+    mise install --yes
+fi
 
 echo ""
 echo "Done! You may want to:"
