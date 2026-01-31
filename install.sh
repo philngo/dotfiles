@@ -41,36 +41,36 @@ for file in "$DOTFILES_DIR"/home/.*; do
 done
 
 # Symlink config directory items
+# Note: We symlink individual files (not directories) so we don't clobber
+# user files that aren't managed by dotfiles.
 echo "Symlinking config dotfiles..."
 mkdir -p "$HOME/.config"
 
-# Symlink directories (e.g., nvim/)
-for dir in "$DOTFILES_DIR"/config/*/; do
-    [ -d "$dir" ] || continue
-    dirname=$(basename "$dir")
+symlink_recursively() {
+    local src_dir="$1"
+    local dest_dir="$2"
+    local prefix="$3"
 
-    target="$HOME/.config/$dirname"
-    if [ -e "$target" ] && [ ! -L "$target" ]; then
-        echo "  Backing up existing $target to $target.backup"
-        mv "$target" "$target.backup"
-    fi
-    ln -sf "$dir" "$target"
-    echo "  Linked .config/$dirname"
-done
+    for item in "$src_dir"/*; do
+        [ -e "$item" ] || continue
+        local name=$(basename "$item")
+        local target="$dest_dir/$name"
 
-# Symlink files (e.g., starship.toml)
-for file in "$DOTFILES_DIR"/config/*; do
-    [ -f "$file" ] || continue
-    filename=$(basename "$file")
+        if [ -d "$item" ]; then
+            mkdir -p "$target"
+            symlink_recursively "$item" "$target" "$prefix/$name"
+        else
+            if [ -e "$target" ] && [ ! -L "$target" ]; then
+                echo "  Backing up existing $target to $target.backup"
+                mv "$target" "$target.backup"
+            fi
+            ln -sf "$item" "$target"
+            echo "  Linked $prefix/$name"
+        fi
+    done
+}
 
-    target="$HOME/.config/$filename"
-    if [ -e "$target" ] && [ ! -L "$target" ]; then
-        echo "  Backing up existing $target to $target.backup"
-        mv "$target" "$target.backup"
-    fi
-    ln -sf "$file" "$target"
-    echo "  Linked .config/$filename"
-done
+symlink_recursively "$DOTFILES_DIR/config" "$HOME/.config" ".config"
 
 # Install mise-managed tools (node, etc.)
 if command -v mise &> /dev/null; then
