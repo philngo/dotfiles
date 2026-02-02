@@ -43,6 +43,9 @@ grm() {
   git fetch origin main:main && git rebase -i main
 }
 
+# checkout main and pull latest
+alias gcm="git checkout main && git pull"
+
 
 # expert is in here
 export PATH="$HOME/.local/bin:$PATH"
