@@ -23,6 +23,15 @@ map("n", "<leader>z", ":e ~/.zshrc<CR>", { desc = "Edit zshrc" })
 map("n", "<leader>sv", ":source ~/.config/nvim/init.lua<CR>", { desc = "Source nvim config" })
 map("n", "<leader>tw", ":%s/\\s\\+$//<CR>", { desc = "Trim trailing whitespace" })
 
+-- Git branch files (files changed on this branch since diverging from main)
+map("n", "<leader>gb", function()
+  require("telescope.builtin").git_files({
+    prompt_title = "Branch Files (vs main)",
+    git_command = { "git", "diff", "--name-only", "main...HEAD" },
+    use_git_root = true,
+  })
+end, { desc = "Git branch files" })
+
 -- Keep cursor position after yank
 map("v", "y", "ygv<Esc>", { noremap = true })
 
