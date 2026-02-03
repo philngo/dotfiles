@@ -8,5 +8,9 @@
 
 [push]
 	autoSetupRemote = true
+[core]
+	excludesFile = ~/.gitignore
+[init]
+	defaultBranch = main
 [status]
 	showUntrackedFiles = all
