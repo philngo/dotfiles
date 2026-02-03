@@ -46,6 +46,9 @@ grm() {
 # checkout main and pull latest
 alias gcm="git checkout main && git pull"
 
+# force push with lease (safer than --force)
+alias gf="git push --force-with-lease"
+
 
 # expert is in here
 export PATH="$HOME/.local/bin:$PATH"
