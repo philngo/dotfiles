@@ -38,13 +38,33 @@ gbd() {
     xargs -r git branch -d
 }
 
-# rebase current branch onto main (interactive)
-grm() {
-  git fetch origin main:main && git rebase -i main
+# helper: determine the main branch (main or master)
+get_main_branch() {
+  local main_branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
+
+  # Fallback if origin/HEAD is not set
+  if [ -z "$main_branch" ]; then
+    if git show-ref --verify --quiet refs/remotes/origin/main; then
+      main_branch="main"
+    else
+      main_branch="master"
+    fi
+  fi
+
+  echo "$main_branch"
 }
 
-# checkout main and pull latest
-alias gcm="git checkout main && git pull"
+# rebase current branch onto main/master (interactive)
+grm() {
+  local main_branch=$(get_main_branch)
+  git fetch origin $main_branch:$main_branch && git rebase -i $main_branch
+}
+
+# checkout main/master and pull latest
+gcm() {
+  local main_branch=$(get_main_branch)
+  git checkout $main_branch && git pull
+}
 
 # force push with lease (safer than --force)
 alias gf="git push --force-with-lease"
