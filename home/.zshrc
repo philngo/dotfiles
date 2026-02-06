@@ -75,5 +75,11 @@ export PATH="$HOME/.local/bin:$PATH"
 alias vim="nvim"
 alias sz="source ~/.zshrc && echo \"Sourced ~/.zshrc\""
 
+# Personal cheatsheet viewer
+cheatsheet() {
+  less -R ~/.cheatsheet
+}
+alias cs="cheatsheet"
+
 # Machine-specific overrides (not tracked in git)
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local

@@ -1,0 +1,14 @@
+# Personal Cheatsheet
+
+## Git Shortcuts (from .zshrc)
+gs          Fuzzy switch branch (sorted by recent)
+gbd         Fuzzy delete branches (Tab for multi-select)
+grm         Rebase current branch onto main/master (interactive)
+gcm         Checkout main/master and pull
+gf          Force push with lease (safer)
+
+## Neovim
+zg          Add word to spell dictionary
+
+## Shell
+sz          Source .zshrc and confirm
