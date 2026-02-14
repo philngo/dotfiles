@@ -8,6 +8,7 @@ setopt autocd
 
 # Completions
 autoload -U compinit; compinit
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
 # mise (tool version manager)
 eval "$(mise activate zsh)"
