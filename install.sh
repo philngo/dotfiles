@@ -89,6 +89,23 @@ if [ -d "$DOTFILES_DIR/claude/agents" ]; then
     done
 fi
 
+# Symlink iTerm2 dynamic profiles
+if [ -d "$DOTFILES_DIR/iterm" ]; then
+    echo "Symlinking iTerm2 dynamic profiles..."
+    mkdir -p "$HOME/Library/Application Support/iTerm2/DynamicProfiles"
+    for file in "$DOTFILES_DIR"/iterm/*.json; do
+        [ -e "$file" ] || continue
+        filename=$(basename "$file")
+        target="$HOME/Library/Application Support/iTerm2/DynamicProfiles/$filename"
+        if [ -e "$target" ] && [ ! -L "$target" ]; then
+            echo "  Backing up existing $target to $target.backup"
+            mv "$target" "$target.backup"
+        fi
+        ln -sf "$file" "$target"
+        echo "  Linked iTerm2/DynamicProfiles/$filename"
+    done
+fi
+
 # Install mise-managed tools (node, etc.)
 if command -v mise &> /dev/null; then
     echo "Installing mise tools..."
@@ -110,9 +127,11 @@ if [ ! -f "$HOME/.config/jj/conf.d/local.toml" ] && [ -f "$DOTFILES_DIR/config/j
     todos+=("  cp $DOTFILES_DIR/config/jj/conf.d/local.toml.example ~/.config/jj/conf.d/local.toml")
 fi
 
+todos+=("  In iTerm2: Settings > Profiles > Catppuccin Mocha > Other Actions > Set as Default")
+
 if [ ${#todos[@]} -gt 0 ]; then
     echo ""
-    echo "You may want to set up local configs (git email, etc.):"
+    echo "Post-install reminders:"
     for todo in "${todos[@]}"; do
         echo "$todo"
     done

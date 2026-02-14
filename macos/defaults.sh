@@ -100,6 +100,22 @@ defaults write NSGlobalDomain AppleEnableSwipeNavigateWithScrolls -bool false
 # defaults -currentHost write -globalDomain NSStatusItemSelectionPadding -int 8
 
 # =============================================================================
+# iTerm2
+# =============================================================================
+
+# Dim split panes slightly
+defaults write com.googlecode.iterm2 SplitPaneDimmingAmount -float 0.15
+
+# Only dim text, not background
+defaults write com.googlecode.iterm2 DimOnlyText -bool true
+
+# Show tab bar even with one tab
+defaults write com.googlecode.iterm2 HideTab -bool false
+
+# Don't stretch tabs to fill bar
+defaults write com.googlecode.iterm2 StretchTabsToFillBar -bool false
+
+# =============================================================================
 # Apply changes
 # =============================================================================
 

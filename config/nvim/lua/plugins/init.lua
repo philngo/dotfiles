@@ -2,12 +2,26 @@
 return {
   -- Colorscheme
   {
-    "maxmx03/solarized.nvim",
+    "catppuccin/nvim",
+    name = "catppuccin",
     lazy = false,
     priority = 1000,
     config = function()
-      require("solarized").setup({})
-      vim.cmd.colorscheme("solarized")
+      require("catppuccin").setup({
+        flavour = "mocha",
+        integrations = {
+          cmp = true,
+          gitsigns = true,
+          nvimtree = true,
+          telescope = true,
+          treesitter = true,
+          mason = true,
+          native_lsp = {
+            enabled = true,
+          },
+        },
+      })
+      vim.cmd.colorscheme("catppuccin")
     end,
   },
 
@@ -95,7 +109,7 @@ return {
     config = function()
       require("lualine").setup({
         options = {
-          theme = "solarized_dark",
+          theme = "catppuccin",
         },
         sections = {
           lualine_c = { { "filename", path = 1 } },

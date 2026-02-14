@@ -32,6 +32,8 @@ open docs/manual-setup.md
 ├── config/                     # Symlinked to ~/.config/
 │   ├── nvim/                   # Neovim config
 │   └── starship.toml           # Prompt config
+├── iterm/
+│   └── profiles.json           # iTerm2 dynamic profile (Catppuccin Mocha)
 ├── macos/
 │   └── defaults.sh             # System preferences script
 ├── docs/                       # Manual setup guides
