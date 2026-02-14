@@ -2,5 +2,8 @@
 home/.zshrc.local
 home/.gitconfig.local
 
+# Claude Code project settings
+.claude/
+
 # macOS
 .DS_Store

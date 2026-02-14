@@ -5,6 +5,7 @@ tap "FelixKratz/formulae"
 # CLI tools
 brew "git"
 brew "gh"
+brew "jj"
 brew "jq"
 brew "ag"
 brew "neovim"

@@ -1,0 +1,7 @@
+# Copy this file to local.toml and set your email:
+#   cp local.toml.example local.toml
+#
+# Files in conf.d/ are loaded alphabetically after config.toml
+
+[user]
+email = "your@email.com"

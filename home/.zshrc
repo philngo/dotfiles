@@ -72,6 +72,8 @@ alias gf="git push --force-with-lease"
 
 # expert is in here
 export PATH="$HOME/.local/bin:$PATH"
+export EDITOR="nvim"
+export VISUAL="nvim"
 alias vim="nvim"
 alias sz="source ~/.zshrc && echo \"Sourced ~/.zshrc\""
 

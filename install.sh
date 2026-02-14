@@ -72,6 +72,23 @@ symlink_recursively() {
 
 symlink_recursively "$DOTFILES_DIR/config" "$HOME/.config" ".config"
 
+# Symlink Claude Code agents
+if [ -d "$DOTFILES_DIR/claude/agents" ]; then
+    echo "Symlinking Claude agents..."
+    mkdir -p "$HOME/.claude/agents"
+    for file in "$DOTFILES_DIR"/claude/agents/*; do
+        [ -e "$file" ] || continue
+        filename=$(basename "$file")
+        target="$HOME/.claude/agents/$filename"
+        if [ -e "$target" ] && [ ! -L "$target" ]; then
+            echo "  Backing up existing $target to $target.backup"
+            mv "$target" "$target.backup"
+        fi
+        ln -sf "$file" "$target"
+        echo "  Linked .claude/agents/$filename"
+    done
+fi
+
 # Install mise-managed tools (node, etc.)
 if command -v mise &> /dev/null; then
     echo "Installing mise tools..."
@@ -79,9 +96,26 @@ if command -v mise &> /dev/null; then
 fi
 
 echo ""
-echo "Done! You may want to:"
-echo "  - Set up local configs (git email, etc.):"
-echo "      cp $DOTFILES_DIR/home/.gitconfig.local.example ~/.gitconfig.local"
-echo "      cp $DOTFILES_DIR/home/.zshrc.local.example ~/.zshrc.local"
-echo "  - Run ./macos/defaults.sh to apply macOS settings"
-echo "  - Restart your shell to pick up new configurations"
+echo "Done!"
+
+# Collect pending post-install tasks
+todos=()
+if [ ! -f "$HOME/.gitconfig.local" ]; then
+    todos+=("  cp $DOTFILES_DIR/home/.gitconfig.local.example ~/.gitconfig.local")
+fi
+if [ ! -f "$HOME/.zshrc.local" ]; then
+    todos+=("  cp $DOTFILES_DIR/home/.zshrc.local.example ~/.zshrc.local")
+fi
+if [ ! -f "$HOME/.config/jj/conf.d/local.toml" ] && [ -f "$DOTFILES_DIR/config/jj/conf.d/local.toml.example" ]; then
+    todos+=("  cp $DOTFILES_DIR/config/jj/conf.d/local.toml.example ~/.config/jj/conf.d/local.toml")
+fi
+
+if [ ${#todos[@]} -gt 0 ]; then
+    echo ""
+    echo "You may want to set up local configs (git email, etc.):"
+    for todo in "${todos[@]}"; do
+        echo "$todo"
+    done
+fi
+echo ""
+echo "Restart your shell to pick up new configurations."

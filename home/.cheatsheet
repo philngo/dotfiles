@@ -1,14 +1,33 @@
 # Personal Cheatsheet
 
 ## Git Shortcuts (from .zshrc)
-gs          Fuzzy switch branch (sorted by recent)
-gbd         Fuzzy delete branches (Tab for multi-select)
-grm         Rebase current branch onto main/master (interactive)
-gcm         Checkout main/master and pull
-gf          Force push with lease (safer)
+gs            Fuzzy switch branch (sorted by recent)
+gbd           Fuzzy delete branches (Tab for multi-select)
+grm           Rebase current branch onto main/master (interactive)
+gcm           Checkout main/master and pull
+gf            Force push with lease (safer)
 
 ## Neovim
-zg          Add word to spell dictionary
+zg            Add word to spell dictionary
+
+# Leader commands
+,v            Edit nvim config
+,z            Edit zshrc
+,sv           Source nvim config
+,tw           Trim trailing whitespace
+,n            Toggle file tree
+,b            Buffers
+,f            Format buffer
+,fg           Live grep
+,fh           Help tags
+,gb           Git branch files (changed vs main)
+,gs           Git status
+,rn           LSP rename
+,ca           LSP code action
 
 ## Shell
-sz          Source .zshrc and confirm
+sz            Source .zshrc and confirm
+
+## jj
+jj git init   New jj repo
+jj st         jj status

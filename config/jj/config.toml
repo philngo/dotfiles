@@ -1,0 +1,4 @@
+# Local settings (email, etc.) go in ~/.config/jj/conf.d/local.toml
+
+[user]
+name = "Phil Ngo"
