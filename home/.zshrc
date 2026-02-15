@@ -81,6 +81,7 @@ export PATH="$HOME/.local/bin:$PATH"
 export EDITOR="nvim"
 export VISUAL="nvim"
 alias vim="nvim"
+alias cat="bat --paging=never"
 alias sz="source ~/.zshrc && echo \"Sourced ~/.zshrc\""
 
 # Personal cheatsheet viewer
