@@ -25,10 +25,11 @@ eval "$(starship init zsh)"
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # This binds:
-# - Up arrow (^[[A): Search backward through history for commands starting with your current input
+# - Up arrow (^[[A): Search backward through history for commands matching your current input up to the cursor
 # - Down arrow (^[[B): Search forward through matching commands
-bindkey '^[[A' history-search-backward
-bindkey '^[[B' history-search-forward
+autoload -U history-beginning-search-backward history-beginning-search-forward
+bindkey '^[[A' history-beginning-search-backward
+bindkey '^[[B' history-beginning-search-forward
 
 # fuzzy git branch switcher
 gs() {
