@@ -340,6 +340,15 @@ return {
   -- Show trailing whitespace
   { "ntpeters/vim-better-whitespace" },
 
+  -- Keybinding discovery popup
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("which-key").setup({})
+    end,
+  },
+
   -- Treesitter for syntax highlighting
   -- REQUIRED: brew install tree-sitter-cli (needed to compile parsers)
   -- Install parsers with :TSInstall <language>
