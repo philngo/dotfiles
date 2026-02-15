@@ -86,5 +86,9 @@ cheatsheet() {
 }
 alias cs="cheatsheet"
 
+# zsh plugins (installed via Homebrew, no plugin manager needed)
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
 # Machine-specific overrides (not tracked in git)
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local

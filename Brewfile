@@ -22,6 +22,8 @@ brew "mise"
 brew "starship"
 brew "jj-starship"
 brew "lua"
+brew "zsh-autosuggestions"
+brew "zsh-syntax-highlighting"
 brew "tree-sitter"
 brew "tree-sitter-cli"
 
