@@ -10,6 +10,16 @@
 	autoSetupRemote = true
 [core]
 	excludesFile = ~/.gitignore
+	pager = delta
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+	side-by-side = true
+[merge]
+	conflictstyle = zdiff3
+[diff]
+	colorMoved = default
 [init]
 	defaultBranch = main
 [status]

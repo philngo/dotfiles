@@ -1,2 +1,13 @@
+# Editor/IDE project files
 .lvimrc
 .cursorrules
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# Environment files
+.env.local

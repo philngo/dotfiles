@@ -13,6 +13,9 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 # mise (tool version manager)
 eval "$(mise activate zsh)"
 
+# direnv (per-directory environment variables)
+eval "$(direnv hook zsh)"
+
 # Prompt
 eval "$(starship init zsh)"
 
@@ -70,8 +73,7 @@ gcm() {
 # force push with lease (safer than --force)
 alias gf="git push --force-with-lease"
 
-
-# expert is in here
+# Environment
 export PATH="$HOME/.local/bin:$PATH"
 export EDITOR="nvim"
 export VISUAL="nvim"

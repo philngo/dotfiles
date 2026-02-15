@@ -28,10 +28,16 @@ open docs/manual-setup.md
 │   ├── .zprofile
 │   ├── .gitconfig
 │   ├── .gitconfig.local.example
-│   └── .aerospace.toml
+│   ├── .gitignore              # Global git ignore
+│   ├── .mise.toml              # Tool versions (node, etc.)
+│   ├── .cheatsheet             # Personal keybinding reference
+│   └── .aerospace.toml         # Window manager config
 ├── config/                     # Symlinked to ~/.config/
-│   ├── nvim/                   # Neovim config
+│   ├── nvim/                   # Neovim config (lazy.nvim)
+│   ├── jj/                     # Jujutsu VCS config
 │   └── starship.toml           # Prompt config
+├── claude/
+│   └── agents/                 # Claude Code custom agents
 ├── iterm/
 │   └── profiles.json           # iTerm2 dynamic profile (Catppuccin Mocha)
 ├── macos/
