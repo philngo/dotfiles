@@ -16,6 +16,9 @@ eval "$(mise activate zsh)"
 # direnv (per-directory environment variables)
 eval "$(direnv hook zsh)"
 
+# zoxide (smarter cd)
+eval "$(zoxide init zsh)"
+
 # Prompt
 eval "$(starship init zsh)"
 

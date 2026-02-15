@@ -27,6 +27,7 @@ zg            Add word to spell dictionary
 
 ## Shell
 sz            Source .zshrc and confirm
+z <dir>       Jump to frecent directory (zoxide)
 
 ## jj
 jj git init   New jj repo
