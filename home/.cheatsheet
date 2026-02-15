@@ -29,6 +29,8 @@ zg            Add word to spell dictionary
 sz            Source .zshrc and confirm
 z <dir>       Jump to frecent directory (zoxide)
 cat           bat with syntax highlighting
+ls / ll       eza listing (ll = long + hidden)
+tree          eza --tree
 
 ## jj
 jj git init   New jj repo
