@@ -1,6 +1,7 @@
 # Taps
 tap "nikitabobko/tap"
 tap "FelixKratz/formulae"
+tap "dmmulroy/tap"
 
 # CLI tools
 brew "git"
@@ -12,12 +13,14 @@ brew "neovim"
 brew "gnu-sed"
 brew "cmake"
 brew "ripgrep"
+brew "git-delta"
 brew "fd"
 brew "fzf"
 brew "tree"
 brew "direnv"
 brew "mise"
 brew "starship"
+brew "jj-starship"
 brew "lua"
 brew "tree-sitter"
 brew "tree-sitter-cli"

@@ -1,5 +1,17 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
+# Jujutsu/Git prompt via jj-starship (unified replacement for built-in git modules)
+[custom.jj]
+when = "jj-starship detect"
+shell = ["jj-starship"]
+format = "$output "
+
+[git_branch]
+disabled = true
+
+[git_status]
+disabled = true
+
 [bun]
 format = "via [$symbol]($style)"
 
