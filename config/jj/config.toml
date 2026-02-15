@@ -6,6 +6,9 @@ name = "Phil Ngo"
 [ui]
 pager = "delta"
 
+[ui.warnings]
+immutable-working-copy = false
+
 [git]
 auto-local-bookmark = false
 
