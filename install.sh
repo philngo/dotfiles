@@ -138,8 +138,9 @@ fi
 if [ ! -f "$HOME/.config/jj/conf.d/local.toml" ] && [ -f "$DOTFILES_DIR/config/jj/conf.d/local.toml.example" ]; then
     todos+=("  cp $DOTFILES_DIR/config/jj/conf.d/local.toml.example ~/.config/jj/conf.d/local.toml")
 fi
-
-todos+=("  In iTerm2: Settings > Profiles > Catppuccin Mocha > Other Actions > Set as Default")
+if [ ! -f "$HOME/.config/wezterm/projects.lua" ]; then
+    todos+=("  cp $DOTFILES_DIR/config/wezterm/projects.lua.example ~/.config/wezterm/projects.lua")
+fi
 
 if [ ${#todos[@]} -gt 0 ]; then
     echo ""

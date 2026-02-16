@@ -1,0 +1,22 @@
+-- Machine-specific project workspaces for Wezterm (Cmd-p selector).
+-- Copy to projects.lua and edit:
+--   cp projects.lua.example projects.lua
+--
+-- Each entry defines a workspace with:
+--   id    — workspace name (shown in status bar)
+--   label — display name in selector
+--   cwd   — working directory
+--   args  — (optional) command to run on launch
+
+return {
+	{
+		id = "dotfiles",
+		label = "Dotfiles",
+		cwd = os.getenv("HOME") .. "/dev/dotfiles",
+	},
+	-- {
+	-- 	id = "myproject",
+	-- 	label = "My Project",
+	-- 	cwd = os.getenv("HOME") .. "/dev/myproject",
+	-- },
+}

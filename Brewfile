@@ -43,6 +43,7 @@ brew "borders"  # JankyBorders
 # Applications
 cask "claude-code"
 cask "alfred"
+cask "wezterm"
 cask "iterm2"
 cask "slack"
 cask "zoom"

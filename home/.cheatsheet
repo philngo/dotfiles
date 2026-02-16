@@ -101,6 +101,38 @@ v             Visual select mode
 t             New tab
 q             Quit
 
+## Wezterm (modifier = Cmd)
+
+### Panes
+Cmd-d                 Split horizontal
+Cmd-Shift-d           Split vertical
+Cmd-h/j/k/l          Navigate panes (vim-style)
+Cmd-Shift-h/j/k/l    Resize pane (5 units)
+Cmd-z                 Zoom pane (toggle fullscreen)
+Cmd-w                 Close pane
+
+### Tabs
+Cmd-t                 New tab
+Cmd-Shift-w           Close tab
+Cmd-] / Cmd-[         Next / previous tab
+Cmd-Shift-] / [       Move tab right / left
+Cmd-1 through Cmd-9   Go to tab N
+
+### Workspaces
+Cmd-p                 Project selector (from projects.lua)
+
+### Copy Mode
+Cmd-Shift-x           Enter copy mode (vi keys)
+Cmd-c / Cmd-v         Copy / paste
+
+### Other
+Cmd-f                 Search
+Cmd-- / Cmd-=         Font size down / up
+Cmd-0                 Reset font size
+Cmd-Shift-r           Reload config
+Cmd-n                 New window
+Cmd-q                 Quit
+
 ## Tmux (prefix = Ctrl-a)
 
 ### Sessions & Windows

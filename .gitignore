@@ -1,6 +1,7 @@
 # Machine-specific local configs (not tracked)
 home/.zshrc.local
 home/.gitconfig.local
+config/wezterm/projects.lua
 
 # Claude Code project settings
 .claude/
