@@ -1,0 +1,28 @@
+## Atuin - shell history
+
+# Search
+search_mode = "fuzzy"
+filter_mode = "global"
+
+# UI
+style = "compact"
+inline_height = 30
+show_preview = true
+show_help = false
+
+# Storage
+## local = no sync, just SQLite history on this machine
+sync_address = ""
+db_path = "~/.local/share/atuin/history.db"
+
+# History
+## Record commands in all sessions
+history_filter = []
+## Don't store commands prefixed with a space
+secrets_filter = true
+
+# Behavior
+## Up arrow: prefix search across all history (like default zsh)
+search_mode_shell_up_key_binding = "prefix"
+filter_mode_shell_up_key_binding = "global"
+## Ctrl-r: fuzzy search across all history

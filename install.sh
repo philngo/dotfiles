@@ -118,6 +118,12 @@ if command -v ya &> /dev/null; then
     ya pkg install
 fi
 
+# Import shell history into atuin (idempotent - skips already-imported entries)
+if command -v atuin &> /dev/null; then
+    echo "Importing shell history into atuin..."
+    atuin import auto
+fi
+
 echo ""
 echo "Done!"
 

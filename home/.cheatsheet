@@ -42,6 +42,12 @@ C-a z                 Zoom pane (toggle fullscreen)
 C-a [                 Copy mode (vim keys)
 C-a r                 Reload config
 
+## Atuin (shell history)
+Ctrl-r            Interactive history search
+Up arrow          Prefix search from current input
+Tab               Insert command (edit before running)
+atuin stats       Usage statistics
+
 ## Shell
 sz            Source .zshrc and confirm
 z <dir>       Jump to frecent directory (zoxide)
