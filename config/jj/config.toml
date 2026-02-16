@@ -5,6 +5,7 @@ name = "Phil Ngo"
 
 [ui]
 pager = "delta"
+default-command = "l"
 
 [ui.warnings]
 immutable-working-copy = false
@@ -13,8 +14,8 @@ immutable-working-copy = false
 auto-local-bookmark = false
 
 [aliases]
-l = ["log", "-r", "trunk()..@"]
-la = ["log", "-r", "all()"]
+n = ["new"]
+l = ["log", "-r", "ancestors(reachable(@, mutable()), 2)"]
 d = ["diff"]
 ds = ["diff", "--stat"]
 f = ["git", "fetch"]
