@@ -7,6 +7,11 @@ sort_dir_first = true
 max_width = 1000
 max_height = 1000
 
+[plugin]
+prepend_previewers = [
+  { name = "*.md", run = "glow", sync = true },
+]
+
 [opener]
 edit = [
   { run = 'nvim "$@"', block = true, for = "unix" },
