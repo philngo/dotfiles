@@ -133,40 +133,6 @@ Cmd-Shift-r           Reload config
 Cmd-n                 New window
 Cmd-q                 Quit
 
-## Tmux (prefix = Ctrl-a)
-
-### Sessions & Windows
-C-a d                 Detach session
-C-a s                 Session picker
-C-a c                 New window (in current dir)
-C-a 1-9               Go to window N
-Shift-Left/Right      Previous / next window (no prefix!)
-C-a w                 Window picker
-
-### Panes
-C-a | / -             Split vertical / horizontal (in current dir)
-C-a h/j/k/l          Navigate panes (vim-style)
-C-a C-h/C-j/C-k/C-l  Resize pane (5 units, repeatable)
-C-a z                 Zoom pane (toggle fullscreen)
-C-a x                 Kill pane
-
-### Copy Mode (vi keys)
-C-a [                 Enter copy mode
-v                     Begin selection
-y                     Copy to clipboard (pbcopy)
-Escape                Cancel copy mode
-q                     Exit copy mode
-
-### Other
-C-a r                 Reload config
-C-a C-a               Send literal Ctrl-a
-
-### Settings Notes
-- Mouse enabled
-- Windows/panes start at 1
-- 50,000 line scrollback
-- True color enabled
-
 ## Atuin (shell history)
 Ctrl-r            Interactive fuzzy search (all sessions)
 Up arrow          Prefix search from current input

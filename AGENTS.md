@@ -4,7 +4,7 @@ This file provides guidance to AI coding agents when working with code in this r
 
 ## What This Is
 
-A macOS dotfiles repo managing configs for Neovim, Zsh, Wezterm, Tmux, Git, Jujutsu (jj), AeroSpace, Starship, Atuin, Yazi, and more. Catppuccin Mocha is the universal colorscheme.
+A macOS dotfiles repo managing configs for Neovim, Zsh, Wezterm, Git, Jujutsu (jj), AeroSpace, Starship, Atuin, Yazi, and more. Catppuccin Mocha is the universal colorscheme.
 
 ## Key Commands
 
@@ -29,7 +29,7 @@ ya pkg install            # Install yazi plugins from config/yazi/package.toml
 
 ## Directory Layout
 
-- `home/` — dotfiles symlinked to `~/` (zshrc, gitconfig, tmux.conf, aerospace.toml, etc.)
+- `home/` — dotfiles symlinked to `~/` (zshrc, gitconfig, aerospace.toml, etc.)
 - `config/` — configs symlinked to `~/.config/` (nvim, wezterm, jj, starship, atuin, yazi)
 - `config/wezterm/` — Wezterm terminal config; `projects.lua` is machine-specific (git-ignored), template at `projects.lua.example`
 - `config/nvim/` — Neovim config using lazy.nvim; plugins defined in `lua/plugins/init.lua`; uses native Neovim 0.11+ LSP API (no nvim-lspconfig)
