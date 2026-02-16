@@ -97,7 +97,7 @@ alias sz="source ~/.zshrc && echo \"Sourced ~/.zshrc\""
 
 # Personal cheatsheet viewer
 cheatsheet() {
-  less -R ~/.cheatsheet
+  glow -p ~/.cheatsheet.md
 }
 alias cs="cheatsheet"
 
