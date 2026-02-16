@@ -31,6 +31,17 @@ a / r / d     Create / rename / trash
 .             Toggle hidden files
 z             Jump via zoxide
 
+## Tmux (prefix = Ctrl-a)
+C-a d                 Detach session
+C-a s                 Session picker
+C-a c                 New window
+C-a 1-9               Go to window N
+C-a | / -             Split vertical / horizontal
+C-a h/j/k/l          Navigate panes
+C-a z                 Zoom pane (toggle fullscreen)
+C-a [                 Copy mode (vim keys)
+C-a r                 Reload config
+
 ## Shell
 sz            Source .zshrc and confirm
 z <dir>       Jump to frecent directory (zoxide)
