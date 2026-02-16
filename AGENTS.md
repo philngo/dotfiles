@@ -43,3 +43,11 @@ ya pkg install            # Install yazi plugins from config/yazi/package.toml
 - Shell is Zsh. Custom functions (`gs`, `gbd`, `grm`, `gcm`, `y`) are defined in `.zshrc`.
 - Vim-style keybindings are used across tools (Wezterm, AeroSpace, Neovim) with modifier escalation: Ctrl-w (Neovim), Cmd (Wezterm), Alt (AeroSpace).
 - `install.sh` backs up existing non-symlink files before overwriting.
+
+## Version Control
+
+This repo uses **jj (Jujutsu)**, not git. Use `jj` commands for all VCS operations.
+
+- Run `jj new` before starting work to create a fresh revision — unlike git, jj automatically tracks all changes in the working copy.
+- Each revision should be atomic — one logical change per revision. If a task has distinct parts (e.g. "add X" and "remove Y"), split them into separate revisions with their own descriptions.
+- Always set a description on revisions (`jj describe -m "..."`). Never leave `(no description set)`.
