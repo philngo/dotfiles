@@ -68,16 +68,34 @@ local function project_selector()
 			end
 			for _, project in ipairs(projects) do
 				if project.id == id then
-					window:perform_action(
-						act.SwitchToWorkspace({
-							name = project.id,
-							spawn = {
+					if project.setup then
+						local exists = false
+						for _, name in ipairs(wezterm.mux.get_workspace_names()) do
+							if name == project.id then
+								exists = true
+								break
+							end
+						end
+						if not exists then
+							local tab, initial_pane, _ = wezterm.mux.spawn_window({
+								workspace = project.id,
 								cwd = project.cwd,
-								args = project.args,
-							},
-						}),
-						pane
-					)
+							})
+							project.setup(initial_pane, project.cwd)
+						end
+						window:perform_action(act.SwitchToWorkspace({ name = project.id }), pane)
+					else
+						window:perform_action(
+							act.SwitchToWorkspace({
+								name = project.id,
+								spawn = {
+									cwd = project.cwd,
+									args = project.args,
+								},
+							}),
+							pane
+						)
+					end
 					return
 				end
 			end
