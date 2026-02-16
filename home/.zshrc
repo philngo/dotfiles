@@ -77,6 +77,16 @@ gcm() {
 # force push with lease (safer than --force)
 alias gf="git push --force-with-lease"
 
+# yazi file manager wrapper (cd to dir on exit)
+function y() {
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+  yazi "$@" --cwd-file="$tmp"
+  if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    builtin cd -- "$cwd"
+  fi
+  rm -f -- "$tmp"
+}
+
 # Environment
 export PATH="$HOME/.local/bin:$PATH"
 export EDITOR="nvim"

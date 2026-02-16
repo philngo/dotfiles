@@ -1,0 +1,4 @@
+# Catppuccin mocha (matches nvim and starship)
+# Declared in package.toml, installed via: ya pkg install
+[flavor]
+use = "catppuccin-mocha"

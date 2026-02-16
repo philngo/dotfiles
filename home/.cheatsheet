@@ -25,6 +25,12 @@ zg            Add word to spell dictionary
 ,rn           LSP rename
 ,ca           LSP code action
 
+## Yazi (terminal file manager)
+y             Open yazi (cd to dir on exit)
+a / r / d     Create / rename / trash
+.             Toggle hidden files
+z             Jump via zoxide
+
 ## Shell
 sz            Source .zshrc and confirm
 z <dir>       Jump to frecent directory (zoxide)

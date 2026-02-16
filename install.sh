@@ -112,6 +112,12 @@ if command -v mise &> /dev/null; then
     mise install --yes
 fi
 
+# Install yazi packages (flavors/plugins declared in config/yazi/package.toml)
+if command -v ya &> /dev/null; then
+    echo "Installing yazi packages..."
+    ya pkg install
+fi
+
 echo ""
 echo "Done!"
 
