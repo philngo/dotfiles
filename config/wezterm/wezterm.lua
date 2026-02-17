@@ -44,11 +44,41 @@ wezterm.on("update-right-status", function(window)
 	}))
 end)
 
+-- Left half | top-right (2/3) / bottom-right split vertically (1/3)
+local function dev_layout(initial_pane, cwd)
+	local right = initial_pane:split({ direction = "Right", size = 0.5, cwd = cwd })
+	right:send_text("claude\n")
+	local bottom_right = right:split({ direction = "Bottom", size = 0.34, cwd = cwd })
+	bottom_right:split({ direction = "Right", size = 0.5, cwd = cwd })
+end
+
+-- Base projects (tracked in git, available on all machines)
+local base_projects = {
+	{
+		id = "dotfiles",
+		label = "Dotfiles",
+		cwd = os.getenv("HOME") .. "/dev/dotfiles",
+		setup = dev_layout,
+	},
+	{
+		id = "throwaway",
+		label = "Throwaway",
+		cwd = os.getenv("HOME") .. "/dev/throwaway",
+		setup = dev_layout,
+	},
+}
+
 -- Project selector
 local function project_selector()
-	local ok, projects = pcall(require, "projects")
-	if not ok then
-		return act.Nop
+	local ok, local_projects = pcall(require, "projects")
+	local projects = {}
+	for _, p in ipairs(base_projects) do
+		table.insert(projects, p)
+	end
+	if ok then
+		for _, p in ipairs(local_projects) do
+			table.insert(projects, p)
+		end
 	end
 
 	local choices = {}

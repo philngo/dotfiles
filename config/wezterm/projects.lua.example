@@ -1,4 +1,5 @@
 -- Machine-specific project workspaces for Wezterm (Cmd-p selector).
+-- These are merged with base projects defined in wezterm.lua.
 -- Copy to projects.lua and edit:
 --   cp projects.lua.example projects.lua
 --
@@ -7,13 +8,9 @@
 --   label — display name in selector
 --   cwd   — working directory
 --   args  — (optional) command to run on launch
+--   setup — (optional) function(initial_pane, cwd) to configure pane layout
 
 return {
-	{
-		id = "dotfiles",
-		label = "Dotfiles",
-		cwd = os.getenv("HOME") .. "/dev/dotfiles",
-	},
 	-- {
 	-- 	id = "myproject",
 	-- 	label = "My Project",
