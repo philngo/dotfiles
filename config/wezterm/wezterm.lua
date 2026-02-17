@@ -81,7 +81,11 @@ local function project_selector()
 								workspace = project.id,
 								cwd = project.cwd,
 							})
-							project.setup(initial_pane, project.cwd)
+							window:perform_action(act.SwitchToWorkspace({ name = project.id }), pane)
+							wezterm.time.call_after(0.1, function()
+								project.setup(initial_pane, project.cwd)
+							end)
+							return
 						end
 						window:perform_action(act.SwitchToWorkspace({ name = project.id }), pane)
 					else
