@@ -8,12 +8,13 @@
 --   label — display name in selector
 --   cwd   — working directory
 --   args  — (optional) command to run on launch
---   setup — (optional) function(initial_pane, cwd) to configure pane layout
+--   setup — (optional) named layout string ("dev") or custom function(initial_pane, cwd)
 
 return {
 	-- {
 	-- 	id = "myproject",
 	-- 	label = "My Project",
 	-- 	cwd = os.getenv("HOME") .. "/dev/myproject",
+	-- 	setup = "dev",
 	-- },
 }

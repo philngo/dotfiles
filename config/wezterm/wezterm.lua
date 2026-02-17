@@ -44,13 +44,16 @@ wezterm.on("update-right-status", function(window)
 	}))
 end)
 
--- Left half | top-right (2/3) / bottom-right split vertically (1/3)
-local function dev_layout(initial_pane, cwd)
-	local right = initial_pane:split({ direction = "Right", size = 0.5, cwd = cwd })
-	right:send_text("claude\n")
-	local bottom_right = right:split({ direction = "Bottom", size = 0.34, cwd = cwd })
-	bottom_right:split({ direction = "Right", size = 0.5, cwd = cwd })
-end
+-- Named layouts (can be referenced by string in projects.lua)
+local layouts = {
+	-- Left half | top-right (2/3) / bottom-right split vertically (1/3)
+	dev = function(initial_pane, cwd)
+		local right = initial_pane:split({ direction = "Right", size = 0.5, cwd = cwd })
+		right:send_text("claude\n")
+		local bottom_right = right:split({ direction = "Bottom", size = 0.34, cwd = cwd })
+		bottom_right:split({ direction = "Right", size = 0.5, cwd = cwd })
+	end,
+}
 
 -- Base projects (tracked in git, available on all machines)
 local base_projects = {
@@ -58,13 +61,13 @@ local base_projects = {
 		id = "dotfiles",
 		label = "Dotfiles",
 		cwd = os.getenv("HOME") .. "/dev/dotfiles",
-		setup = dev_layout,
+		setup = "dev",
 	},
 	{
 		id = "throwaway",
 		label = "Throwaway",
 		cwd = os.getenv("HOME") .. "/dev/throwaway",
-		setup = dev_layout,
+		setup = "dev",
 	},
 }
 
@@ -78,6 +81,12 @@ local function project_selector()
 	if ok then
 		for _, p in ipairs(local_projects) do
 			table.insert(projects, p)
+		end
+	end
+	-- Resolve string setup names to layout functions
+	for _, p in ipairs(projects) do
+		if type(p.setup) == "string" then
+			p.setup = layouts[p.setup]
 		end
 	end
 
