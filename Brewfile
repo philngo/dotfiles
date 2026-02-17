@@ -40,6 +40,7 @@ cask "nikitabobko/tap/aerospace"
 brew "borders"  # JankyBorders
 
 # Applications
+cask "claude"
 cask "claude-code"
 cask "alfred"
 cask "wezterm"
