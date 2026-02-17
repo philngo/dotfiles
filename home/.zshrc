@@ -91,7 +91,7 @@ export VISUAL="nvim"
 alias vim="nvim"
 alias ls="eza"
 alias ll="eza -la"
-alias tree="eza --tree"
+alias tree="eza --tree --ignore-glob='__pycache__|*.pyc'"
 alias cat="bat --paging=never"
 alias sz="source ~/.zshrc && echo \"Sourced ~/.zshrc\""
 
