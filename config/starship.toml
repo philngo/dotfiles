@@ -127,7 +127,7 @@ format = 'via [$symbol$stack]($style)'
 format = 'via [$symbol]($style)'
 
 [python]
-format = 'via [$symbol]($style)'
+format = 'via [$symbol($virtualenv )]($style)'
 
 [quarto]
 format = 'via [$symbol]($style)'
