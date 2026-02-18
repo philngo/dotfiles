@@ -72,9 +72,25 @@ symlink_recursively() {
 
 symlink_recursively "$DOTFILES_DIR/config" "$HOME/.config" ".config"
 
-# Symlink Claude Code agents
+# Symlink Claude Code config
+echo "Symlinking Claude config..."
+mkdir -p "$HOME/.claude"
+
+# Symlink top-level claude files (keybindings.json, etc.)
+for file in "$DOTFILES_DIR"/claude/*.json; do
+    [ -e "$file" ] || continue
+    filename=$(basename "$file")
+    target="$HOME/.claude/$filename"
+    if [ -e "$target" ] && [ ! -L "$target" ]; then
+        echo "  Backing up existing $target to $target.backup"
+        mv "$target" "$target.backup"
+    fi
+    ln -sf "$file" "$target"
+    echo "  Linked .claude/$filename"
+done
+
+# Symlink Claude agents
 if [ -d "$DOTFILES_DIR/claude/agents" ]; then
-    echo "Symlinking Claude agents..."
     mkdir -p "$HOME/.claude/agents"
     for file in "$DOTFILES_DIR"/claude/agents/*; do
         [ -e "$file" ] || continue
