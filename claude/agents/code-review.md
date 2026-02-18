@@ -59,7 +59,7 @@ For each dimension, assess the code and note specific findings:
 
 ### 5. Value Per Line
 - Is every line necessary?
-- Dead code or redundant logic
+- Dead code or redundant logic — unreachable branches, unused variables/imports, commented-out code left behind
 - Over-engineering vs. under-engineering
 - Appropriate use of abstractions
 
@@ -79,8 +79,9 @@ For each dimension, assess the code and note specific findings:
 - Function/method documentation where needed
 - Complex logic explanations
 - API documentation
-- README updates if applicable
+- README or other docs updates — if behavior, interfaces, or configuration changed, flag any docs that are now stale or missing
 - Inline comments for non-obvious code
+- Comments explain **why**, not **what** — comments that merely restate the code add noise; comments should explain intent, tradeoffs, or non-obvious constraints
 
 ### 9. Test Coverage
 - Are critical paths tested?
@@ -183,3 +184,6 @@ Before finalizing your review, verify:
 - [ ] Have I been respectful and constructive?
 - [ ] Did I miss any security implications?
 - [ ] Are my suggestions specific enough to act on?
+- [ ] Is there dead code (unreachable paths, unused symbols, leftover commented-out blocks)?
+- [ ] Do any docs (README, docstrings, API docs) need updating to reflect the changes?
+- [ ] Do inline comments explain *why* rather than *what*?
