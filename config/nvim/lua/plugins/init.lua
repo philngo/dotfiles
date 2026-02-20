@@ -42,23 +42,25 @@ return {
         end,
       })
 
-      -- Override branch detection to use jj bookmarks (falls back to git)
-      -- In jj repos, find the nearest mutable ancestor (including @) with a bookmark.
-      -- This gives session-per-bookmark behavior analogous to session-per-branch in git.
+      -- Override branch detection: try jj bookmark first, fall back to git branch
       persisted.branch = function()
-        local jj_out = vim.trim(vim.fn.system(
-          "jj bookmark list --revisions 'latest(::@ & bookmarks() & mutable())' 2>/dev/null"
-        ))
-        if vim.v.shell_error == 0 and jj_out ~= "" then
-          -- Output is like "  my-feature: abcdefgh some description"
-          local name = jj_out:match("^%s*([^:%s]+)")
-          if name then return name end
+        -- Try jj first: find closest ancestor bookmark
+        local bookmark = vim.fn.systemlist(
+          "jj log --no-graph --ignore-working-copy --color never "
+            .. "-r 'latest(heads(::@ & bookmarks()))' "
+            .. '-T "self.bookmarks().map(|b| b.name()).join(\\",\\")" '
+            .. "2>/dev/null"
+        )[1]
+        if vim.v.shell_error == 0 and bookmark and bookmark ~= "" then
+          return bookmark
         end
-        -- Fall back to git branch (works in plain git repos, not jj)
+
+        -- Fall back to git branch (for non-jj repos)
         local branch = vim.fn.systemlist("git rev-parse --abbrev-ref HEAD 2>/dev/null")[1]
         if vim.v.shell_error == 0 and branch and branch ~= "" and branch ~= "HEAD" then
           return branch
         end
+
         return nil
       end
     end,
@@ -94,32 +96,30 @@ return {
     keys = {
       { "<C-p>", "<cmd>Telescope find_files<cr>", desc = "Find files" },
       { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
-      { "<leader>gs", "<cmd>Telescope git_status<cr>", desc = "Git status" },
-      { "<leader>js", function()
-        local root = vim.trim(vim.fn.system("jj root 2>/dev/null"))
-        if vim.v.shell_error ~= 0 or root == "" then
-          vim.notify("Not in a jj repo", vim.log.levels.WARN)
-          return
-        end
-        require("telescope.builtin").find_files({
-          prompt_title = "jj Status",
-          cwd = root,
-          -- jj diff --stat lines: "path/to/file  | N ++--"
-          find_command = { "sh", "-c", "jj diff --stat 2>/dev/null | grep ' | ' | awk '{print $1}'" },
-        })
-      end, desc = "jj status files" },
-      { "<leader>jb", function()
-        local root = vim.trim(vim.fn.system("jj root 2>/dev/null"))
-        if vim.v.shell_error ~= 0 or root == "" then
-          vim.notify("Not in a jj repo", vim.log.levels.WARN)
-          return
-        end
-        require("telescope.builtin").find_files({
-          prompt_title = "jj Branch Files (vs trunk)",
-          cwd = root,
-          find_command = { "sh", "-c", "jj diff --from 'trunk()' --stat 2>/dev/null | grep ' | ' | awk '{print $1}'" },
-        })
-      end, desc = "jj branch files (vs trunk)" },
+      {
+        "<leader>gs",
+        function()
+          -- Try jj: files changed in current revision
+          local files = vim.fn.systemlist(
+            "jj diff --no-pager --name-only --color never 2>/dev/null"
+          )
+          if vim.v.shell_error == 0 then
+            require("telescope.pickers")
+              .new({}, {
+                prompt_title = "Changed Files (jj @)",
+                finder = require("telescope.finders").new_table({ results = files }),
+                sorter = require("telescope.config").values.generic_sorter({}),
+                previewer = require("telescope.config").values.file_previewer({}),
+              })
+              :find()
+            return
+          end
+
+          -- Fall back to git status
+          require("telescope.builtin").git_status()
+        end,
+        desc = "Changed files (jj or git status)",
+      },
       { "<leader>b", "<cmd>Telescope buffers<cr>", desc = "Buffers" },
       { "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "Help tags" },
     },
