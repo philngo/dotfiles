@@ -42,11 +42,21 @@ return {
         end,
       })
 
-      -- Override branch detection to work in subdirectories of git repos
-      -- Default only checks for .git in cwd, this uses git rev-parse which works anywhere
+      -- Override branch detection to use jj bookmarks (falls back to git)
+      -- In jj repos, find the nearest mutable ancestor (including @) with a bookmark.
+      -- This gives session-per-bookmark behavior analogous to session-per-branch in git.
       persisted.branch = function()
+        local jj_out = vim.trim(vim.fn.system(
+          "jj bookmark list --revision 'latest(::@ & bookmarks() & mutable())' 2>/dev/null"
+        ))
+        if vim.v.shell_error == 0 and jj_out ~= "" then
+          -- Output is like "  my-feature: abcdefgh some description"
+          local name = jj_out:match("^%s*([^:%s]+)")
+          if name then return name end
+        end
+        -- Fall back to git branch (works in plain git repos, not jj)
         local branch = vim.fn.systemlist("git rev-parse --abbrev-ref HEAD 2>/dev/null")[1]
-        if vim.v.shell_error == 0 and branch and branch ~= "" then
+        if vim.v.shell_error == 0 and branch and branch ~= "" and branch ~= "HEAD" then
           return branch
         end
         return nil
@@ -85,6 +95,31 @@ return {
       { "<C-p>", "<cmd>Telescope find_files<cr>", desc = "Find files" },
       { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
       { "<leader>gs", "<cmd>Telescope git_status<cr>", desc = "Git status" },
+      { "<leader>js", function()
+        local root = vim.trim(vim.fn.system("jj root 2>/dev/null"))
+        if vim.v.shell_error ~= 0 or root == "" then
+          vim.notify("Not in a jj repo", vim.log.levels.WARN)
+          return
+        end
+        require("telescope.builtin").find_files({
+          prompt_title = "jj Status",
+          cwd = root,
+          -- jj diff --stat lines: "path/to/file  | N ++--"
+          find_command = { "sh", "-c", "jj diff --stat 2>/dev/null | grep ' | ' | awk '{print $1}'" },
+        })
+      end, desc = "jj status files" },
+      { "<leader>jb", function()
+        local root = vim.trim(vim.fn.system("jj root 2>/dev/null"))
+        if vim.v.shell_error ~= 0 or root == "" then
+          vim.notify("Not in a jj repo", vim.log.levels.WARN)
+          return
+        end
+        require("telescope.builtin").find_files({
+          prompt_title = "jj Branch Files (vs trunk)",
+          cwd = root,
+          find_command = { "sh", "-c", "jj diff --from 'trunk()' --stat 2>/dev/null | grep ' | ' | awk '{print $1}'" },
+        })
+      end, desc = "jj branch files (vs trunk)" },
       { "<leader>b", "<cmd>Telescope buffers<cr>", desc = "Buffers" },
       { "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "Help tags" },
     },
