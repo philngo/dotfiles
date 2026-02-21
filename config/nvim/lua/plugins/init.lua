@@ -47,7 +47,7 @@ return {
       -- This gives session-per-bookmark behavior analogous to session-per-branch in git.
       persisted.branch = function()
         local jj_out = vim.trim(vim.fn.system(
-          "jj bookmark list --revision 'latest(::@ & bookmarks() & mutable())' 2>/dev/null"
+          "jj bookmark list --revisions 'latest(::@ & bookmarks() & mutable())' 2>/dev/null"
         ))
         if vim.v.shell_error == 0 and jj_out ~= "" then
           -- Output is like "  my-feature: abcdefgh some description"
