@@ -16,6 +16,7 @@ auto-local-bookmark = false
 [aliases]
 n = ["new"]
 l = ["log", "-r", "ancestors(reachable(@, mutable()), 2)"]
+lo = ["log", "-r", "ancestors(reachable(@, mutable()), 2)"]
 d = ["diff"]
 ds = ["diff", "--stat"]
 f = ["git", "fetch"]
