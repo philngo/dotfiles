@@ -76,8 +76,8 @@ symlink_recursively "$DOTFILES_DIR/config" "$HOME/.config" ".config"
 echo "Symlinking Claude config..."
 mkdir -p "$HOME/.claude"
 
-# Symlink top-level claude files (keybindings.json, etc.)
-for file in "$DOTFILES_DIR"/claude/*.json; do
+# Symlink top-level claude files (keybindings.json, CLAUDE.md, etc.)
+for file in "$DOTFILES_DIR"/claude/*.json "$DOTFILES_DIR"/claude/*.md; do
     [ -e "$file" ] || continue
     filename=$(basename "$file")
     target="$HOME/.claude/$filename"

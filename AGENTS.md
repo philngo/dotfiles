@@ -33,6 +33,7 @@ ya pkg install            # Install yazi plugins from config/yazi/package.toml
 - `config/` — configs symlinked to `~/.config/` (nvim, wezterm, jj, starship, atuin, yazi)
 - `config/wezterm/` — Wezterm terminal config; `projects.lua` is machine-specific (git-ignored), template at `projects.lua.example`
 - `config/nvim/` — Neovim config using lazy.nvim; plugins defined in `lua/plugins/init.lua`; uses native Neovim 0.11+ LSP API (no nvim-lspconfig)
+- `claude/CLAUDE.md` — user-scoped Claude Code instructions, symlinked to `~/.claude/CLAUDE.md`
 - `claude/agents/` — Claude Code custom agents, symlinked to `~/.claude/agents/`
 - `iterm/` — iTerm2 dynamic profiles, symlinked to `~/Library/Application Support/iTerm2/DynamicProfiles/`
 - `macos/` — macOS defaults script
