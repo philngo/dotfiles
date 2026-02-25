@@ -41,7 +41,7 @@ brew "borders"  # JankyBorders
 
 # Applications
 cask "claude"
-cask "claude-code"
+# claude-code: installed via native installer (auto-upgrades) — curl -fsSL https://claude.ai/install.sh | bash
 cask "codex"
 cask "alfred"
 cask "wezterm"
