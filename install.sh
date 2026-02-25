@@ -134,6 +134,12 @@ if command -v ya &> /dev/null; then
     ya pkg install
 fi
 
+# Install Claude Code via native installer (auto-upgrades)
+if ! command -v claude &> /dev/null; then
+    echo "Installing Claude Code..."
+    curl -fsSL https://claude.ai/install.sh | bash
+fi
+
 # Import shell history into atuin (idempotent - skips already-imported entries)
 if command -v atuin &> /dev/null; then
     echo "Importing shell history into atuin..."
