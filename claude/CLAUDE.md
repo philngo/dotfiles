@@ -1,5 +1,9 @@
 # User Preferences
 
+## Branch Naming
+
+Branch/bookmark names should always start with `philn/` (5 chars, not `phil/`).
+
 ## Version Control: jj (Jujutsu)
 
 I use **jj (Jujutsu)** instead of git. Check for a `.jj/` directory in the repo root. If present, use `jj` commands instead of `git`. jj uses **bookmarks** instead of branches.

@@ -51,6 +51,7 @@ cask "zoom"
 cask "visual-studio-code"
 cask "postman"
 cask "figma"
+cask "linear-linear"
 cask "spotify"
 cask "macdown"
 
