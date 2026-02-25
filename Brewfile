@@ -42,6 +42,7 @@ brew "borders"  # JankyBorders
 # Applications
 cask "claude"
 cask "claude-code"
+cask "codex"
 cask "alfred"
 cask "wezterm"
 cask "iterm2"
