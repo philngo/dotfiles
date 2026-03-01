@@ -24,3 +24,9 @@ p = ["git", "push"]
 bm = ["bookmark", "move", "--from", "trunk()", "--to", "@-"]
 ra = ["rebase", "-s", "roots(mine() ~ immutable())", "-d", "main"]
 ll = ["log", "-r", "descendants(ancestors(@) & mutable()) | trunk()"]
+
+[colors]
+# Use background color highlights instead of underlines for changed tokens
+"diff token" = { underline = false }
+"diff added token" = { bg = "#394545" }
+"diff removed token" = { bg = "#493447" }
