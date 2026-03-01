@@ -88,6 +88,7 @@ function y() {
 export PATH="$HOME/.local/bin:$PATH"
 export EDITOR="nvim"
 export VISUAL="nvim"
+export LESS="-i"  # smart case-insensitive search (lowercase pattern = case-insensitive)
 alias vim="nvim"
 alias ls="eza"
 alias ll="eza -la"
