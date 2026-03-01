@@ -234,3 +234,6 @@ on-mode-changed = []
     alt-shift-j = ['join-with down', 'mode main']
     alt-shift-k = ['join-with up', 'mode main']
     alt-shift-l = ['join-with right', 'mode main']
+
+    # Move all windows to workspace 1 and flatten
+    1 = ['exec-and-forget aerospace list-windows --all --format "%{window-id}" | xargs -I{} aerospace move-node-to-workspace --window-id {} 1 && aerospace workspace 1 && aerospace flatten-workspace-tree', 'mode main']
