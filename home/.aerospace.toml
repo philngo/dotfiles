@@ -219,6 +219,16 @@ on-mode-changed = []
     alt-shift-semicolon = 'mode service'
     alt-shift-r = 'mode service'
 
+    # Container management (alt-ctrl) — available without entering service mode
+    alt-ctrl-h = 'join-with left'
+    alt-ctrl-j = 'join-with down'
+    alt-ctrl-k = 'join-with up'
+    alt-ctrl-l = 'join-with right'
+    alt-ctrl-f = 'flatten-workspace-tree'
+    alt-ctrl-r = 'reload-config'
+    alt-ctrl-backspace = 'close-all-windows-but-current'
+    alt-ctrl-1 = 'exec-and-forget aerospace list-windows --all --format "%{window-id}" | xargs -I{} aerospace move-node-to-workspace --window-id {} 1 && aerospace workspace 1 && aerospace flatten-workspace-tree'
+
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
