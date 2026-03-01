@@ -134,6 +134,12 @@ if command -v ya &> /dev/null; then
     ya pkg install
 fi
 
+# Rebuild bat theme cache (picks up custom themes from ~/.config/bat/themes/)
+if command -v bat &> /dev/null; then
+    echo "Rebuilding bat theme cache..."
+    bat cache --build
+fi
+
 # Install Claude Code via native installer (auto-upgrades)
 if ! command -v claude &> /dev/null; then
     echo "Installing Claude Code..."
