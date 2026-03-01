@@ -1,6 +1,7 @@
 # This is Git's per-user configuration file.
 [include]
 	path = ~/.gitconfig.local
+	path = ~/.config/delta/catppuccin.gitconfig
 
 [user]
 	name = Phil Ngo
@@ -16,6 +17,7 @@
 [delta]
 	navigate = true
 	side-by-side = true
+	features = catppuccin-mocha
 [merge]
 	conflictstyle = zdiff3
 [diff]
