@@ -96,6 +96,16 @@ alias tree="eza --tree --ignore-glob='__pycache__|*.pyc'"
 alias cat="bat --paging=never"
 alias sz="source ~/.zshrc && echo \"Sourced ~/.zshrc\""
 
+# open all files changed in the branch
+vb() {
+  local files=(${(f)"$(jj diff --from 'trunk()' --name-only)"})
+  if (( ${#files} == 0 )); then
+    echo "No changed files between trunk and @"
+    return 1
+  fi
+  nvim "${files[@]}"
+}
+
 # Personal cheatsheet viewer
 cheatsheet() {
   glow -p ~/.cheatsheet.md
