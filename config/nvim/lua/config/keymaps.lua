@@ -23,16 +23,16 @@ map("n", "<leader>z", ":e ~/.zshrc<CR>", { desc = "Edit zshrc" })
 map("n", "<leader>sv", ":source ~/.config/nvim/init.lua<CR>", { desc = "Source nvim config" })
 map("n", "<leader>tw", ":%s/\\s\\+$//<CR>", { desc = "Trim trailing whitespace" })
 
--- Changed files (jj squash workflow or git branch diff)
+-- Changed files (jj bookmark or git branch diff)
 map("n", "<leader>gb", function()
-  -- Try jj: files changed across parent + current revision (squash workflow)
+  -- Try jj: files changed across whole bookmark relative to trunk
   local files = vim.fn.systemlist(
-    "jj diff --no-pager --name-only --from @-- --to @ --color never 2>/dev/null"
+    "jj diff --no-pager --name-only --from 'trunk()' --to @ --color never 2>/dev/null"
   )
   if vim.v.shell_error == 0 and #files > 0 then
     require("telescope.pickers")
       .new({}, {
-        prompt_title = "Changed Files (jj @-..@)",
+        prompt_title = "Changed Files (jj trunk()..@)",
         finder = require("telescope.finders").new_table({ results = files }),
         sorter = require("telescope.config").values.generic_sorter({}),
         previewer = require("telescope.config").values.file_previewer({}),
@@ -48,6 +48,11 @@ map("n", "<leader>gb", function()
     use_git_root = true,
   })
 end, { desc = "Changed files (jj or git)" })
+
+-- jj aliases
+require("which-key").add({ { "<leader>j", group = "jj" } })
+map("n", "<leader>js", "<leader>gs", { remap = true, desc = "Changed files in revision (@)" })
+map("n", "<leader>jb", "<leader>gb", { remap = true, desc = "Changed files in bookmark (vs trunk)" })
 
 -- Keep cursor position after yank
 map("v", "y", "ygv<Esc>", { noremap = true })
