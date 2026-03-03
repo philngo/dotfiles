@@ -10,8 +10,8 @@ default-command = "log"
 [ui.warnings]
 immutable-working-copy = false
 
-[git]
-auto-local-bookmark = false
+[remotes.origin]
+auto-track-bookmarks = "main"
 
 [aliases]
 n = ["new"]
