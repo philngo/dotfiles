@@ -96,6 +96,11 @@ alias tree="eza --tree --ignore-glob='__pycache__|*.pyc'"
 alias cat="bat --paging=never"
 alias sz="source ~/.zshrc && echo \"Sourced ~/.zshrc\""
 
+# fetch remote, rebase all mutable revisions onto updated main
+jjs() {
+  jj git fetch && jj rebase -s 'roots(mine() ~ immutable())' -d main
+}
+
 # open all files changed in the branch
 vb() {
   local files=(${(f)"$(jj diff --from 'trunk()' --name-only)"})
