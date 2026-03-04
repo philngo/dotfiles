@@ -15,3 +15,4 @@ I use **jj (Jujutsu)** instead of git. Check for a `.jj/` directory in the repo 
 3. **One logical change = one revision** — for multi-step plans, run `jj new` + `jj describe` at each phase boundary. Do NOT accumulate multiple phases into a single revision.
 4. **Use conventional commit descriptions** — e.g. `feat: add dark mode toggle`, `fix: correct off-by-one in pagination`.
 5. **Finish with an empty working copy** — run `jj new` when done so `@` is empty. This prevents polluting a completed revision in the next session.
+6. **Always pass `-m` when squashing described revisions** — `jj squash` opens an interactive editor if both source and destination have descriptions. Use `jj squash -m "..."` to avoid blocking on the editor.
