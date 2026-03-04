@@ -98,7 +98,7 @@ alias sz="source ~/.zshrc && echo \"Sourced ~/.zshrc\""
 
 # fetch remote, rebase all mutable revisions onto updated main
 jjs() {
-  jj git fetch && jj rebase -s 'roots(mine() ~ immutable())' -d main
+  jj git fetch && jj bookmark set main -r main@origin && jj rebase -s 'roots(mine() ~ immutable())' -d main
 }
 
 # open all files changed in the branch
