@@ -96,6 +96,15 @@ alias tree="eza --tree --ignore-glob='__pycache__|*.pyc'"
 alias cat="bat --paging=never"
 alias sz="source ~/.zshrc && echo \"Sourced ~/.zshrc\""
 
+# fuzzy jj bookmark switcher
+js() {
+  local selection
+  selection=$(jj bookmark list 2>/dev/null |
+    grep -v '@' |
+    fzf --height 40% --reverse) || return
+  jj edit "${selection%%:*}"
+}
+
 # fetch remote, rebase all mutable revisions onto updated main
 jjs() {
   jj git fetch && jj bookmark set main -r main@origin && jj rebase -s 'roots(mine() ~ immutable())' -d main
