@@ -1,3 +1,5 @@
+tap "withgraphite/tap"
 brew "git"
+brew "withgraphite/tap/graphite"
 brew "git-delta"
 brew "lazygit"
