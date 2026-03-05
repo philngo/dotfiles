@@ -2,10 +2,12 @@
 tap "nikitabobko/tap"
 tap "FelixKratz/formulae"
 tap "dmmulroy/tap"
+tap "withgraphite/tap"
 
 # CLI tools
 brew "git"
 brew "gh"
+brew "withgraphite/tap/graphite"
 brew "jj"
 brew "jq"
 brew "ag"
