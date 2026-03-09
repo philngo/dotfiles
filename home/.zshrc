@@ -107,7 +107,10 @@ js() {
 
 # fetch remote, rebase all mutable revisions onto updated main
 jjs() {
-  jj git fetch && jj bookmark set main -r main@origin && jj rebase -s 'roots(mine() ~ immutable())' -d main
+  jj git fetch
+  if [[ -n $(jj log -r 'mine() ~ immutable()' --no-graph -T 'change_id' 2>/dev/null) ]]; then
+    jj rebase -s 'roots(mine() ~ immutable())' -d main
+  fi
 }
 
 # open all files changed in the branch
