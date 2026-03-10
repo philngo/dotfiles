@@ -17,7 +17,7 @@ command -v starship &>/dev/null && eval "$(starship init zsh)"
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # Environment
-export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/.local/share/nvim/mason/bin:$PATH"
 export EDITOR="nvim"
 export VISUAL="nvim"
 export LESS="-i"  # smart case-insensitive search (lowercase pattern = case-insensitive)
