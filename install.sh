@@ -105,6 +105,23 @@ if [ -d "$DOTFILES_DIR/claude/agents" ]; then
     done
 fi
 
+# Symlink Codex skills
+if [ -d "$DOTFILES_DIR/codex/skills" ]; then
+    echo "Symlinking Codex skills..."
+    mkdir -p "$HOME/.codex/skills"
+    for skill in "$DOTFILES_DIR"/codex/skills/*; do
+        [ -e "$skill" ] || continue
+        skill_name=$(basename "$skill")
+        target="$HOME/.codex/skills/$skill_name"
+        if [ -e "$target" ] && [ ! -L "$target" ]; then
+            echo "  Backing up existing $target to $target.backup"
+            mv "$target" "$target.backup"
+        fi
+        ln -sfn "$skill" "$target"
+        echo "  Linked .codex/skills/$skill_name"
+    done
+fi
+
 # Symlink iTerm2 dynamic profiles
 if [ -d "$DOTFILES_DIR/iterm" ]; then
     echo "Symlinking iTerm2 dynamic profiles..."

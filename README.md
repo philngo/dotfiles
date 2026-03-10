@@ -36,6 +36,8 @@ open docs/manual-setup.md
 │   ├── nvim/                   # Neovim config (lazy.nvim)
 │   ├── jj/                     # Jujutsu VCS config
 │   └── starship.toml           # Prompt config
+├── codex/
+│   └── skills/                 # Codex custom skills, symlinked to ~/.codex/skills/
 ├── claude/
 │   └── agents/                 # Claude Code custom agents
 ├── iterm/
@@ -85,6 +87,10 @@ vim ~/.gitconfig.local
 1. Move the file into `home/` or `config/` as appropriate
 2. Run `./install.sh` to create the symlink
 3. Commit the changes
+
+### Managing Codex skills
+
+Repo-managed Codex skills live in `codex/skills/`. `./install.sh` symlinks each top-level skill directory into `~/.codex/skills/`, which keeps Codex-managed entries like `~/.codex/skills/.system/` intact.
 
 ### Updating packages
 
