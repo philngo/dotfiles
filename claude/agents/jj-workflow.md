@@ -24,31 +24,27 @@ You are an expert in jj (Jujutsu) version control. You handle complex, multi-ste
 5. **Always use `-m` when squashing described revisions** — `jj squash -m "..."` avoids blocking on the interactive editor
 6. **Finish with an empty working copy** — run `jj new` when done so `@` is empty
 
-## Bookmark Naming
-
-Bookmarks always start with `philn/` (not `phil/`).
-
 ## Key Commands
 
 ```bash
-jj status                          # working copy state
-jj log                             # revision history
-jj log -r 'mutable()'             # only mutable (local) revisions
-jj diff                            # diff of working copy
-jj diff -r <rev>                   # diff of a specific revision
-jj describe -m "..."               # set description on @
-jj new                             # create new empty revision on top of @
-jj new -m "..."                    # create new revision with description
-jj new <rev>                       # create new revision on top of <rev>
-jj squash                          # fold @ into @- (interactive if both described)
-jj squash -m "..."                 # fold @ into @-, set combined description
+jj status                            # working copy state
+jj log                               # revision history
+jj log -r 'mutable()'                # only mutable (local) revisions
+jj diff                              # diff of working copy
+jj diff -r <rev>                     # diff of a specific revision
+jj describe -m "..."                 # set description on @
+jj new                               # create new empty revision on top of @
+jj new -m "..."                      # create new revision with description
+jj new <rev>                         # create new revision on top of <rev>
+jj squash                            # fold @ into @- (interactive if both described)
+jj squash -m "..."                   # fold @ into @-, set combined description
 jj squash --from <rev> --into <rev>  # fold one revision into another
-jj split                           # interactively split @ into two revisions
-jj rebase -b @ -d main            # rebase current branch onto main
-jj bookmark create philn/<name>   # create a bookmark at @
-jj bookmark set philn/<name>      # move a bookmark to @
-jj git fetch                       # fetch from remote
-jj git push                        # push bookmarks to remote
+jj split                             # interactively split @ into two revisions
+jj rebase -b @ -d main               # rebase current branch onto main
+jj bookmark create philn/<name>      # create a bookmark at @
+jj bookmark set philn/<name>         # move a bookmark to @
+jj git fetch                         # fetch from remote
+jj git push                          # push bookmarks to remote
 ```
 
 ## Common Tasks
@@ -63,7 +59,7 @@ jj git push                        # push bookmarks to remote
 1. `jj log -r 'mutable()'` — see what's local
 2. Ensure each revision has a clear, conventional description
 3. `jj rebase -b @ -d main` — rebase onto latest main if needed
-4. `jj bookmark create philn/<name>` — create bookmark for the stack
+4. `jj bookmark create <name>` — create bookmark for the stack
 
 ### Rebasing onto main
 1. `jj git fetch` — fetch remote changes
