@@ -106,6 +106,18 @@ if [ -d "$DOTFILES_DIR/claude/agents" ]; then
 fi
 
 # Symlink Codex skills
+if [ -f "$DOTFILES_DIR/codex/AGENTS.md" ]; then
+    echo "Symlinking Codex guidance..."
+    mkdir -p "$HOME/.codex"
+    target="$HOME/.codex/AGENTS.md"
+    if [ -e "$target" ] && [ ! -L "$target" ]; then
+        echo "  Backing up existing $target to $target.backup"
+        mv "$target" "$target.backup"
+    fi
+    ln -sf "$DOTFILES_DIR/codex/AGENTS.md" "$target"
+    echo "  Linked .codex/AGENTS.md"
+fi
+
 if [ -d "$DOTFILES_DIR/codex/skills" ]; then
     echo "Symlinking Codex skills..."
     mkdir -p "$HOME/.codex/skills"

@@ -37,6 +37,7 @@ open docs/manual-setup.md
 │   ├── jj/                     # Jujutsu VCS config
 │   └── starship.toml           # Prompt config
 ├── codex/
+│   ├── AGENTS.md               # User-scoped Codex instructions, symlinked to ~/.codex/AGENTS.md
 │   └── skills/                 # Codex custom skills, symlinked to ~/.codex/skills/
 ├── claude/
 │   └── agents/                 # Claude Code custom agents
@@ -91,6 +92,10 @@ vim ~/.gitconfig.local
 ### Managing Codex skills
 
 Repo-managed Codex skills live in `codex/skills/`. `./install.sh` symlinks each top-level skill directory into `~/.codex/skills/`, which keeps Codex-managed entries like `~/.codex/skills/.system/` intact.
+
+### Managing Codex guidance
+
+Repo-managed Codex user guidance lives in `codex/AGENTS.md`. `./install.sh` symlinks it to `~/.codex/AGENTS.md`, which Codex loads as global personal guidance.
 
 ### Updating packages
 

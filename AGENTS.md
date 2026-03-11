@@ -20,7 +20,7 @@ ya pkg install            # Install yazi plugins from config/yazi/package.toml
 
 **Symlink-based, no stow.** `install.sh` symlinks `home/*` to `~/` and recursively symlinks individual files in `config/*` to `~/.config/` (not whole directories, to avoid clobbering unmanaged files).
 
-**Tool-specific managed directories:** `install.sh` also symlinks Claude files from `claude/` into `~/.claude/`, Codex skills from `codex/skills/` into `~/.codex/skills/`, and iTerm2 profiles from `iterm/` into iTerm's DynamicProfiles directory.
+**Tool-specific managed directories:** `install.sh` also symlinks Claude files from `claude/` into `~/.claude/`, Codex guidance from `codex/AGENTS.md` into `~/.codex/AGENTS.md`, Codex skills from `codex/skills/` into `~/.codex/skills/`, and iTerm2 profiles from `iterm/` into iTerm's DynamicProfiles directory.
 
 **Layered config pattern:** Base configs are tracked in git. Machine-specific overrides go in `.local` files (git-ignored) with `.local.example` templates provided:
 - `home/.gitconfig` includes `~/.gitconfig.local`
@@ -35,6 +35,7 @@ ya pkg install            # Install yazi plugins from config/yazi/package.toml
 - `config/` — configs symlinked to `~/.config/` (nvim, wezterm, jj, starship, atuin, yazi)
 - `config/wezterm/` — Wezterm terminal config; `projects.lua` is machine-specific (git-ignored), template at `projects.lua.example`
 - `config/nvim/` — Neovim config using lazy.nvim; plugins defined in `lua/plugins/init.lua`; uses native Neovim 0.11+ LSP API (no nvim-lspconfig)
+- `codex/AGENTS.md` — user-scoped Codex instructions, symlinked to `~/.codex/AGENTS.md`
 - `codex/skills/` — Codex custom skills, symlinked as top-level entries into `~/.codex/skills/` so Codex-managed `.system/` entries remain untouched
 - `claude/CLAUDE.md` — user-scoped Claude Code instructions, symlinked to `~/.claude/CLAUDE.md`
 - `claude/agents/` — Claude Code custom agents, symlinked to `~/.claude/agents/`
