@@ -64,5 +64,4 @@ cask "qlcolorcode"      # syntax highlighting
 cask "qlstephen"        # plain text files without extension
 cask "qlmarkdown"       # markdown preview
 cask "quicklook-csv"    # CSV preview
-cask "qlvideo"          # video thumbnails
 cask "ipynb-quicklook"  # Jupyter notebooks
