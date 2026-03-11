@@ -33,6 +33,7 @@ brew "glow"
 brew "poppler"
 brew "zsh-syntax-highlighting"
 brew "tree-sitter"
+brew "terraform"
 brew "tree-sitter-cli"
 
 # Window management
