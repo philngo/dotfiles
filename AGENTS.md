@@ -55,4 +55,5 @@ This repo uses **jj (Jujutsu)**, not git. Use `jj` commands for all VCS operatio
 
 - Run `jj new` before starting work to create a fresh revision — unlike git, jj automatically tracks all changes in the working copy.
 - Each revision should be atomic — one logical change per revision. If a task has distinct parts (e.g. "add X" and "remove Y"), split them into separate revisions with their own descriptions.
-- Always set a description on revisions (`jj describe -m "..."`). Never leave `(no description set)`.
+- Describe revisions that contain an actual logical change with `jj describe -m "..."`.
+- After `jj new`, leave the new empty `@` revision undescribed until the next real change starts. Do not invent placeholder descriptions like `chore: ready for next change`.
