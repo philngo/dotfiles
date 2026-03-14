@@ -1,2 +1,3 @@
 [tools]
-node = "lts"
+node = "22"
+"npm:mcp-remote" = "latest"
