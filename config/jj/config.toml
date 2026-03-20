@@ -11,7 +11,7 @@ default-command = "log"
 immutable-working-copy = false
 
 [remotes.origin]
-auto-track-bookmarks = "main"
+auto-track-bookmarks = '"main" | glob:"philn/*" | glob:"philngo/*"'
 
 [aliases]
 n = ["new"]
