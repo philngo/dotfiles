@@ -27,6 +27,9 @@ bm = ["bookmark", "move", "--from", "trunk()", "--to", "@-"]
 ra = ["rebase", "-s", "roots(mine() ~ immutable())", "-d", "main"]
 ll = ["log", "-r", "descendants(ancestors(@) & mutable()) | trunk()"]
 
+[revsets]
+log = "present(@) | ancestors((immutable_heads().. & mine()), 2) | trunk()"
+
 [colors]
 # Use background color highlights instead of underlines for changed tokens
 "diff token" = { underline = false }

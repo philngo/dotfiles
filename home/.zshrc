@@ -105,13 +105,16 @@ js() {
   jj edit "${selection%%:*}"
 }
 
-# fetch remote, rebase all mutable revisions onto updated main
+# fetch main from remote, rebase all mutable revisions onto updated main
 jjs() {
-  jj git fetch
+  jj git fetch --bookmark main
   if [[ -n $(jj log -r 'mine() ~ immutable()' --no-graph -T 'change_id' 2>/dev/null) ]]; then
     jj rebase -s 'roots(mine() ~ immutable())' -d main
   fi
 }
+
+# fetch a specific remote bookmark (for reviewing someone else's branch)
+jr() { jj git fetch --bookmark "$1"; }
 
 # open all files changed in the branch
 vb() {
