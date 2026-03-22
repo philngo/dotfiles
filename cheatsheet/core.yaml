@@ -1,0 +1,31 @@
+sections:
+  - title: "Shell"
+    entries:
+      - key: "`sz`"
+        desc: "Source .zshrc and confirm"
+      - key: "`cs`"
+        desc: "View this cheatsheet"
+      - key: "`z <dir>`"
+        desc: "Jump to frecent directory (zoxide)"
+      - key: "`zi`"
+        desc: "Interactive directory picker (zoxide)"
+      - key: "`cat`"
+        desc: "bat with syntax highlighting"
+      - key: "`ls` / `ll`"
+        desc: "eza listing (ll = long + hidden)"
+      - key: "`tree`"
+        desc: "eza --tree"
+      - key: "`vim`"
+        desc: "nvim"
+      - key: "`rg <pattern>`"
+        desc: "Ripgrep (fast recursive search)"
+
+  - title: "Shell — Environment"
+    entries:
+      - key: "`mise`"
+        desc: "Tool version manager (e.g. node lts)"
+      - key: "`direnv`"
+        desc: "Per-directory environment variables"
+
+notes:
+  - "`.zshrc.local` for machine-specific config"

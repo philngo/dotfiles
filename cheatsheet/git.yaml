@@ -1,0 +1,15 @@
+sections:
+  - title: "Git Shortcuts"
+    entries:
+      - key: "`gs`"
+        desc: "Fuzzy switch branch (sorted by recent)"
+      - key: "`gbd`"
+        desc: "Fuzzy delete branches (Tab for multi-select)"
+      - key: "`grm`"
+        desc: "Rebase current branch onto main/master (interactive)"
+      - key: "`gcm`"
+        desc: "Checkout main/master and pull"
+      - key: "`gf`"
+        desc: "Force push with lease (safer)"
+      - key: "`lazygit`"
+        desc: "Git TUI"

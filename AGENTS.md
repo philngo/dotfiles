@@ -18,7 +18,7 @@ ya pkg install            # Install yazi plugins from config/yazi/package.toml
 
 **Module-based installation.** `modules.conf` (git-ignored, copied from `modules.conf.example`) lists enabled modules. `install.sh` reads it and only installs packages and symlinks for enabled modules.
 
-**Modules:** `core`, `git`, `jj`, `nvim`, `wezterm`, `wm`, `ai`, `tools`, `apps`. Each module has a Brewfile in `brew/`, optional shell config in `zsh/`, and owns specific files in `home/` and `config/`.
+**Modules:** `core`, `git`, `jj`, `nvim`, `wezterm`, `wm`, `ai`, `tools`, `apps`, `iterm`. Each module has a Brewfile in `brew/`, optional shell config in `zsh/`, and owns specific files in `home/` and `config/`.
 
 **Symlink-based, no stow.** `install.sh` symlinks `home/*` to `~/` and recursively symlinks individual files in `config/*` to `~/.config/` (not whole directories, to avoid clobbering unmanaged files). Files are filtered by module ownership.
 
@@ -37,6 +37,8 @@ ya pkg install            # Install yazi plugins from config/yazi/package.toml
 - `modules.conf.example` — template listing all modules; copy to `modules.conf` to customize
 - `brew/` — per-module Brewfiles (`core.Brewfile`, `git.Brewfile`, etc.) + `local.Brewfile` (git-ignored)
 - `zsh/` — per-module shell configs (`core.zsh`, `git.zsh`, `jj.zsh`, `tools.zsh`) symlinked to `~/.config/zsh/`
+- `cheatsheet/` — per-module YAML cheatsheet entries; compiled on demand by `bin/cheatsheet` and displayed via `cs` alias
+- `bin/` — repo scripts (e.g. `cheatsheet` compiler)
 - `home/` — dotfiles symlinked to `~/` (zshrc, gitconfig, aerospace.toml, etc.)
 - `config/` — configs symlinked to `~/.config/` (nvim, wezterm, jj, atuin, yazi, bat, delta)
 - `config/starship-git.toml` / `config/starship-jj.toml` — starship prompt variants; install.sh picks based on jj module

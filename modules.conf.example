@@ -13,5 +13,6 @@ nvim        # Neovim editor + full plugin setup
 wezterm     # WezTerm terminal emulator
 wm          # AeroSpace window manager + JankyBorders
 ai          # Claude Code, Codex — configs, agents, hooks, skills
+iterm       # iTerm2 terminal emulator + dynamic profiles
 tools       # power-user CLI: yazi, atuin, direnv, mise, zoxide, gh, etc.
 apps        # GUI apps: slack, zoom, spotify, figma, vscode, etc.

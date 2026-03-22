@@ -26,11 +26,19 @@ command -v eza &>/dev/null && alias ls="eza" && alias ll="eza -la" && alias tree
 command -v bat &>/dev/null && alias cat="bat --paging=never"
 alias sz="source ~/.zshrc && echo \"Sourced ~/.zshrc\""
 
-# Personal cheatsheet viewer
-if command -v glow &>/dev/null; then
-  cheatsheet() { glow -p ~/.cheatsheet.md; }
-  alias cs="cheatsheet"
-fi
+# Personal cheatsheet viewer (compiled from per-module YAML files)
+cheatsheet() {
+  local dotfiles_dir
+  dotfiles_dir="$(cd "$(dirname "$(readlink "$HOME/.zshrc")")" && cd .. && pwd)"
+  local output
+  output=$("$dotfiles_dir/bin/cheatsheet")
+  if command -v glow &>/dev/null; then
+    echo "$output" | glow -p -
+  else
+    echo "$output" | less
+  fi
+}
+alias cs="cheatsheet"
 
 # zsh plugins (installed via Homebrew, no plugin manager needed)
 [ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh

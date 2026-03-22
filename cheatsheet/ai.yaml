@@ -1,0 +1,11 @@
+sections:
+  - title: "Claude Code"
+    entries:
+      - key: "`Ctrl-g`"
+        desc: "Open $EDITOR for multi-line input"
+      - key: "`Ctrl-r`"
+        desc: "Search command history"
+      - key: "`Ctrl-o`"
+        desc: "Toggle transcript view"
+      - key: "`Ctrl-t`"
+        desc: "Toggle todo list"

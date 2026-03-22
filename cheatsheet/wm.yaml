@@ -1,0 +1,66 @@
+sections:
+  - title: "AeroSpace — Focus & Move"
+    entries:
+      - key: "`Alt-h/j/k/l`"
+        desc: "Focus left/down/up/right"
+      - key: "`Alt-Shift-h/j/k/l`"
+        desc: "Move window left/down/up/right"
+
+  - title: "AeroSpace — Layout"
+    entries:
+      - key: "`Alt-/`"
+        desc: "Cycle tiles/horizontal/vertical"
+      - key: "`Alt-,`"
+        desc: "Cycle accordion/horizontal/vertical"
+      - key: "`Alt-Shift-Space`"
+        desc: "Toggle floating/tiling"
+
+  - title: "AeroSpace — Workspaces"
+    entries:
+      - key: "`Alt-1` to `Alt-9`"
+        desc: "Switch to workspace 1-9"
+      - key: "`Alt-Shift-1` to `9`"
+        desc: "Move window to workspace 1-9"
+      - key: "`Alt-a` to `Alt-z`"
+        desc: "Switch to workspace A-Z"
+      - key: "`Alt-Shift-a` to `z`"
+        desc: "Move window to workspace A-Z"
+      - key: "`Alt-Tab`"
+        desc: "Toggle last workspace"
+      - key: "`Alt-Shift-Tab`"
+        desc: "Move workspace to next monitor"
+
+  - title: "AeroSpace — Resize"
+    entries:
+      - key: "`Alt--` / `Alt-=`"
+        desc: "Resize smart -50 / +50"
+
+  - title: "AeroSpace — Container Mgmt"
+    entries:
+      - key: "`Alt-Cmd-Ctrl-h/j/k/l`"
+        desc: "Join with left/down/up/right"
+      - key: "`Alt-Cmd-Ctrl-f`"
+        desc: "Flatten workspace tree"
+      - key: "`Alt-Cmd-Ctrl-r`"
+        desc: "Reload config"
+      - key: "`Alt-Cmd-Ctrl-Backspace`"
+        desc: "Close all windows but current"
+      - key: "`Alt-Cmd-Ctrl-1`"
+        desc: "Move all windows to workspace 1 and flatten"
+
+  - title: "AeroSpace — Service Mode"
+    entries:
+      - key: "`Alt-Shift-;` or `Alt-Shift-r`"
+        desc: "Enter service mode"
+      - key: "`r`"
+        desc: "Flatten workspace tree"
+      - key: "`f`"
+        desc: "Toggle floating/tiling"
+      - key: "`Backspace`"
+        desc: "Close all windows but current"
+      - key: "`Esc`"
+        desc: "Reload config and exit"
+      - key: "`Alt-Shift-h/j/k/l`"
+        desc: "Join with left/down/up/right"
+      - key: "`1`"
+        desc: "Move all windows to workspace 1 and flatten"

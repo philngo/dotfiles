@@ -44,7 +44,8 @@ fi
 # Returns the module that owns a config directory (empty = always install)
 config_module() {
     case "$1" in
-        bat|delta) echo "core" ;;
+        bat)       echo "core" ;;
+        delta)     echo "git" ;;
         jj)        echo "jj" ;;
         nvim)      echo "nvim" ;;
         wezterm)   echo "wezterm" ;;
@@ -58,8 +59,8 @@ config_module() {
 # Returns the module that owns a home dotfile (empty = always install)
 home_module() {
     case "$1" in
-        .zshrc|.zprofile|.cheatsheet.md) echo "core" ;;
-        .gitconfig)                      echo "git" ;;
+        .zshrc|.zprofile) echo "core" ;;
+        .gitconfig|.gitignore)           echo "git" ;;
         .aerospace.toml)                 echo "wm" ;;
         .mise.toml)                      echo "tools" ;;
         *)                               echo "" ;;
@@ -331,7 +332,7 @@ fi
 
 # --- iTerm2 dynamic profiles ---
 
-if [ -d "$DOTFILES_DIR/iterm" ]; then
+if module_enabled "iterm" && [ -d "$DOTFILES_DIR/iterm" ]; then
     echo "Symlinking iTerm2 dynamic profiles..."
     mkdir -p "$HOME/Library/Application Support/iTerm2/DynamicProfiles"
     for file in "$DOTFILES_DIR"/iterm/*.json; do
@@ -353,7 +354,7 @@ if module_enabled "tools" && command -v ya &> /dev/null; then
     ya pkg install
 fi
 
-if command -v bat &> /dev/null; then
+if module_enabled "core" && command -v bat &> /dev/null; then
     echo "Rebuilding bat theme cache..."
     bat cache --build
 fi

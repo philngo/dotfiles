@@ -1,0 +1,55 @@
+sections:
+  - title: "Wezterm — Panes"
+    entries:
+      - key: "`Cmd-d`"
+        desc: "Split horizontal"
+      - key: "`Cmd-Shift-d`"
+        desc: "Split vertical"
+      - key: "`Cmd-h/j/k/l`"
+        desc: "Navigate panes (vim-style)"
+      - key: "`Cmd-Shift-h/j/k/l`"
+        desc: "Resize pane (5 units)"
+      - key: "`Cmd-z`"
+        desc: "Zoom pane (toggle fullscreen)"
+      - key: "`Cmd-w`"
+        desc: "Close pane"
+
+  - title: "Wezterm — Tabs"
+    entries:
+      - key: "`Cmd-t`"
+        desc: "New tab"
+      - key: "`Cmd-Shift-w`"
+        desc: "Close tab"
+      - key: "`Cmd-]` / `Cmd-[`"
+        desc: "Next / previous tab"
+      - key: "`Cmd-Shift-]` / `[`"
+        desc: "Move tab right / left"
+      - key: "`Cmd-1` through `Cmd-9`"
+        desc: "Go to tab N"
+
+  - title: "Wezterm — Workspaces"
+    entries:
+      - key: "`Cmd-p`"
+        desc: "Project selector (from projects.lua)"
+
+  - title: "Wezterm — Copy Mode"
+    entries:
+      - key: "`Cmd-Shift-x`"
+        desc: "Enter copy mode (vi keys)"
+      - key: "`Cmd-c` / `Cmd-v`"
+        desc: "Copy / paste"
+
+  - title: "Wezterm — Other"
+    entries:
+      - key: "`Cmd-f`"
+        desc: "Search"
+      - key: "`Cmd--` / `Cmd-=`"
+        desc: "Font size down / up"
+      - key: "`Cmd-0`"
+        desc: "Reset font size"
+      - key: "`Cmd-Shift-r`"
+        desc: "Reload config"
+      - key: "`Cmd-n`"
+        desc: "New window"
+      - key: "`Cmd-q`"
+        desc: "Quit"
