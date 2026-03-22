@@ -40,7 +40,8 @@ open docs/manual-setup.md
 │   ├── AGENTS.md               # User-scoped Codex instructions, symlinked to ~/.codex/AGENTS.md
 │   └── skills/                 # Codex custom skills, symlinked to ~/.codex/skills/
 ├── claude/
-│   └── agents/                 # Claude Code custom agents
+│   ├── agents/                 # Claude Code custom agents
+│   └── hooks/                  # Claude Code hook scripts (notification → WezTerm focus)
 ├── iterm/
 │   └── profiles.json           # iTerm2 dynamic profile (Catppuccin Mocha)
 ├── macos/
@@ -96,6 +97,19 @@ Repo-managed Codex skills live in `codex/skills/`. `./install.sh` symlinks each 
 ### Managing Codex guidance
 
 Repo-managed Codex user guidance lives in `codex/AGENTS.md`. `./install.sh` symlinks it to `~/.codex/AGENTS.md`, which Codex loads as global personal guidance.
+
+### Claude Code notifications
+
+When Claude Code is waiting for permission approval in one WezTerm workspace and you're working in another, a macOS notification is sent automatically. Clicking it brings you to the correct workspace.
+
+**How it works:**
+
+1. Claude Code fires a `Notification` hook on `permission_prompt` events
+2. `claude/hooks/claude-notify` detects the WezTerm workspace via `$WEZTERM_PANE` and sends a notification via `terminal-notifier`
+3. Clicking the notification runs `claude/hooks/wezterm-focus`, which writes the workspace name to `~/.local/state/wezterm/switch-workspace` and activates WezTerm
+4. WezTerm's `window-focus-changed` event reads the file and switches to the target workspace
+
+**Requirements:** `terminal-notifier` (installed via Brewfile), `jq`, `wezterm`.
 
 ### Updating packages
 
