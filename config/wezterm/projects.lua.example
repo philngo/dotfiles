@@ -17,4 +17,13 @@ return {
 	-- 	cwd = os.getenv("HOME") .. "/dev/myproject",
 	-- 	setup = "dev",
 	-- },
+
+	-- jj workspace entries (created via `jw-add` shell function)
+	-- Convention: main working copy is implicit "0", first extra workspace is "-1"
+	-- {
+	-- 	id = "myproject_1",
+	-- 	label = "My Project (WS 1)",
+	-- 	cwd = os.getenv("HOME") .. "/dev/myproject-1",
+	-- 	setup = "dev",
+	-- },
 }

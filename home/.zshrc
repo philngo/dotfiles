@@ -126,6 +126,40 @@ vb() {
   nvim "${files[@]}"
 }
 
+# jj workspace management
+# Create a sibling workspace: ~/dev/project → ~/dev/project-<suffix>
+jw-add() {
+  local suffix="${1:-1}"
+  jj root &>/dev/null || { echo "Not in a jj repo"; return 1; }
+  local root=$(jj root)
+  local ws_path="$(dirname "$root")/$(basename "$root")-${suffix}"
+  if [[ -d "$ws_path" ]]; then
+    echo "Already exists: $ws_path"
+    return 1
+  fi
+  jj workspace add "$ws_path" --name "$(basename "$root")-${suffix}"
+  echo "Created workspace at $ws_path"
+}
+
+# Remove a sibling workspace
+jw-rm() {
+  local suffix="${1:-1}"
+  jj root &>/dev/null || { echo "Not in a jj repo"; return 1; }
+  local root=$(jj root)
+  local name="$(basename "$root")-${suffix}"
+  local ws_path="$(dirname "$root")/${name}"
+  jj workspace forget "$name" 2>/dev/null
+  if [[ -d "$ws_path" ]]; then
+    rm -rf "$ws_path"
+    echo "Removed workspace: $ws_path"
+  else
+    echo "Forgot workspace '$name' (no directory found)"
+  fi
+}
+
+# List workspaces
+jw-list() { jj workspace list; }
+
 # Personal cheatsheet viewer
 cheatsheet() {
   glow -p ~/.cheatsheet.md

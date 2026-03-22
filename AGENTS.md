@@ -45,7 +45,7 @@ ya pkg install            # Install yazi plugins from config/yazi/package.toml
 
 ## Conventions
 
-- Shell is Zsh. Custom functions (`gs`, `gbd`, `grm`, `gcm`, `y`) are defined in `.zshrc`.
+- Shell is Zsh. Custom functions (`gs`, `gbd`, `grm`, `gcm`, `y`, `js`, `jjs`, `jr`, `vb`, `jw-add`, `jw-rm`, `jw-list`) are defined in `.zshrc`.
 - Vim-style keybindings are used across tools (Wezterm, AeroSpace, Neovim) with modifier escalation: Ctrl-w (Neovim), Cmd (Wezterm), Alt (AeroSpace).
 - `install.sh` backs up existing non-symlink files before overwriting.
 
