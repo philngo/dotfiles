@@ -11,9 +11,9 @@ echo "Installing dotfiles from $DOTFILES_DIR"
 # --- Load enabled modules ---
 
 if [ ! -f "$MODULES_FILE" ]; then
-    echo "No modules.conf found. Copying from modules.conf.example (all modules enabled)."
+    echo "No modules.conf found. Creating with 'all' modules enabled."
     echo "Edit modules.conf to customize, then re-run."
-    cp "$DOTFILES_DIR/modules.conf.example" "$MODULES_FILE"
+    echo "all" > "$MODULES_FILE"
 fi
 
 enabled_modules=()

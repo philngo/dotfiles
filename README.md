@@ -18,7 +18,7 @@ vim modules.conf
 ./install.sh
 ```
 
-`install.sh` is idempotent — safe to re-run anytime. It installs Homebrew (if needed), installs packages for enabled modules, and symlinks config files to the right places.
+`install.sh` is idempotent — safe to re-run anytime. It installs Homebrew (if needed), installs packages for enabled modules, and symlinks config files to the right places. If `modules.conf` doesn't exist, it defaults to `all`.
 
 After install, follow the post-install reminders printed at the end (local config files, macOS defaults, etc.).
 
