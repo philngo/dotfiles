@@ -22,6 +22,7 @@ map("n", "<leader>v", ":e ~/.config/nvim/init.lua<CR>", { desc = "Edit nvim conf
 map("n", "<leader>z", ":e ~/.zshrc<CR>", { desc = "Edit zshrc" })
 map("n", "<leader>sv", ":source ~/.config/nvim/init.lua<CR>", { desc = "Source nvim config" })
 map("n", "<leader>tw", ":%s/\\s\\+$//<CR>", { desc = "Trim trailing whitespace" })
+map("n", "<leader>md", ":MarkdownPreviewToggle<CR>", { silent = true, desc = "Markdown preview" })
 
 -- Changed files (jj bookmark or git branch diff)
 map("n", "<leader>gb", function()
