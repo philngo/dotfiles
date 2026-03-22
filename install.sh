@@ -1,12 +1,77 @@
 #!/usr/bin/env bash
 # Idempotent install script - safe to run multiple times.
+# Reads modules.conf to determine which components to install.
 set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+MODULES_FILE="$DOTFILES_DIR/modules.conf"
 
 echo "Installing dotfiles from $DOTFILES_DIR"
 
-# Install Homebrew if not present
+# --- Load enabled modules ---
+
+if [ ! -f "$MODULES_FILE" ]; then
+    echo "No modules.conf found. Copying from modules.conf.example (all modules enabled)."
+    echo "Edit modules.conf to customize, then re-run."
+    cp "$DOTFILES_DIR/modules.conf.example" "$MODULES_FILE"
+fi
+
+enabled_modules=()
+while IFS= read -r line; do
+    line="${line%%#*}"         # strip comments
+    line="$(echo "$line" | tr -d '[:space:]')"  # strip whitespace
+    [ -n "$line" ] && enabled_modules+=("$line")
+done < "$MODULES_FILE"
+
+module_enabled() {
+    local mod="$1"
+    for m in "${enabled_modules[@]}"; do
+        [ "$m" = "$mod" ] && return 0
+    done
+    return 1
+}
+
+echo "Enabled modules: ${enabled_modules[*]}"
+
+# --- Module-to-file mappings ---
+# Returns the module that owns a config directory (empty = always install)
+config_module() {
+    case "$1" in
+        bat|delta) echo "core" ;;
+        jj)        echo "jj" ;;
+        nvim)      echo "nvim" ;;
+        wezterm)   echo "wezterm" ;;
+        atuin)     echo "tools" ;;
+        yazi)      echo "tools" ;;
+        zsh)       echo "_skip" ;;  # handled separately
+        *)         echo "" ;;
+    esac
+}
+
+# Returns the module that owns a home dotfile (empty = always install)
+home_module() {
+    case "$1" in
+        .zshrc|.zprofile|.cheatsheet.md) echo "core" ;;
+        .gitconfig)                      echo "git" ;;
+        .aerospace.toml)                 echo "wm" ;;
+        .mise.toml)                      echo "tools" ;;
+        *)                               echo "" ;;
+    esac
+}
+
+# --- Helper: safe symlink with backup ---
+safe_link() {
+    local src="$1" target="$2" label="$3"
+    if [ -e "$target" ] && [ ! -L "$target" ]; then
+        echo "  Backing up existing $target to $target.backup"
+        mv "$target" "$target.backup"
+    fi
+    ln -sf "$src" "$target"
+    echo "  Linked $label"
+}
+
+# --- Install Homebrew if not present ---
+
 if ! command -v brew &> /dev/null; then
     echo "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -15,13 +80,28 @@ if ! command -v brew &> /dev/null; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
-# Install packages from Brewfile
-if [ -f "$DOTFILES_DIR/Brewfile" ]; then
-    echo "Installing Homebrew packages..."
-    brew bundle --file="$DOTFILES_DIR/Brewfile"
-fi
+# --- Install packages from per-module Brewfiles ---
 
-# Symlink home directory dotfiles
+echo "Installing Homebrew packages..."
+tmpfile=$(mktemp)
+for mod in "${enabled_modules[@]}"; do
+    bf="$DOTFILES_DIR/brew/${mod}.Brewfile"
+    if [ -f "$bf" ]; then
+        cat "$bf" >> "$tmpfile"
+        echo "" >> "$tmpfile"
+    fi
+done
+# Include machine-specific local Brewfile if present
+if [ -f "$DOTFILES_DIR/brew/local.Brewfile" ]; then
+    cat "$DOTFILES_DIR/brew/local.Brewfile" >> "$tmpfile"
+fi
+if [ -s "$tmpfile" ]; then
+    brew bundle --file="$tmpfile"
+fi
+rm -f "$tmpfile"
+
+# --- Symlink home directory dotfiles (module-filtered) ---
+
 echo "Symlinking home dotfiles..."
 for file in "$DOTFILES_DIR"/home/.*; do
     [ -e "$file" ] || continue
@@ -31,18 +111,19 @@ for file in "$DOTFILES_DIR"/home/.*; do
     # Skip .local.example files (they're templates, not actual dotfiles)
     [[ "$filename" == *.local.example ]] && continue
 
-    target="$HOME/$filename"
-    if [ -e "$target" ] && [ ! -L "$target" ]; then
-        echo "  Backing up existing $target to $target.backup"
-        mv "$target" "$target.backup"
+    mod=$(home_module "$filename")
+    if [ -n "$mod" ] && ! module_enabled "$mod"; then
+        echo "  Skipping $filename (module '$mod' not enabled)"
+        continue
     fi
-    ln -sf "$file" "$target"
-    echo "  Linked $filename"
+
+    safe_link "$file" "$HOME/$filename" "$filename"
 done
 
-# Symlink config directory items
+# --- Symlink config directory items (module-filtered) ---
 # Note: We symlink individual files (not directories) so we don't clobber
 # user files that aren't managed by dotfiles.
+
 echo "Symlinking config dotfiles..."
 mkdir -p "$HOME/.config"
 
@@ -70,152 +151,221 @@ symlink_recursively() {
     done
 }
 
-symlink_recursively "$DOTFILES_DIR/config" "$HOME/.config" ".config"
+for item in "$DOTFILES_DIR"/config/*; do
+    [ -e "$item" ] || continue
+    name=$(basename "$item")
 
-# Symlink Claude Code config
-echo "Symlinking Claude config..."
-mkdir -p "$HOME/.claude"
+    # Skip zsh dir (handled separately below)
+    [ "$name" = "zsh" ] && continue
 
-# Symlink top-level claude files (keybindings.json, CLAUDE.md, etc.)
-for file in "$DOTFILES_DIR"/claude/*.json "$DOTFILES_DIR"/claude/*.md; do
-    [ -e "$file" ] || continue
-    filename=$(basename "$file")
-    target="$HOME/.claude/$filename"
-    if [ -e "$target" ] && [ ! -L "$target" ]; then
-        echo "  Backing up existing $target to $target.backup"
-        mv "$target" "$target.backup"
+    # Skip starship variants (handled separately below)
+    [[ "$name" == starship-*.toml ]] && continue
+
+    mod=$(config_module "$name")
+    if [ "$mod" = "_skip" ]; then
+        continue
+    elif [ -n "$mod" ] && ! module_enabled "$mod"; then
+        echo "  Skipping config/$name (module '$mod' not enabled)"
+        continue
     fi
-    ln -sf "$file" "$target"
-    echo "  Linked .claude/$filename"
+
+    if [ -d "$item" ]; then
+        symlink_recursively "$item" "$HOME/.config/$name" ".config/$name"
+    else
+        safe_link "$item" "$HOME/.config/$name" ".config/$name"
+    fi
 done
 
-# Symlink Claude agents
-if [ -d "$DOTFILES_DIR/claude/agents" ]; then
-    mkdir -p "$HOME/.claude/agents"
-    for file in "$DOTFILES_DIR"/claude/agents/*; do
-        [ -e "$file" ] || continue
-        filename=$(basename "$file")
-        target="$HOME/.claude/agents/$filename"
-        if [ -e "$target" ] && [ ! -L "$target" ]; then
-            echo "  Backing up existing $target to $target.backup"
-            mv "$target" "$target.backup"
-        fi
-        ln -sf "$file" "$target"
-        echo "  Linked .claude/agents/$filename"
-    done
+# --- Starship config (variant selection) ---
+
+echo "Symlinking starship config..."
+if module_enabled "jj"; then
+    safe_link "$DOTFILES_DIR/config/starship-jj.toml" "$HOME/.config/starship.toml" ".config/starship.toml (jj variant)"
+else
+    safe_link "$DOTFILES_DIR/config/starship-git.toml" "$HOME/.config/starship.toml" ".config/starship.toml (git variant)"
 fi
 
-# Symlink Claude hooks
-if [ -d "$DOTFILES_DIR/claude/hooks" ]; then
+# --- Zsh module files ---
+
+echo "Symlinking zsh modules..."
+mkdir -p "$HOME/.config/zsh"
+
+# Clean stale zsh module symlinks (from previously-enabled modules)
+for existing in "$HOME"/.config/zsh/*.zsh; do
+    [ -L "$existing" ] || continue
+    link_target=$(readlink "$existing")
+    if [[ "$link_target" == "$DOTFILES_DIR/zsh/"* ]]; then
+        rm "$existing"
+    fi
+done
+
+# Install enabled module zsh files
+for mod in "${enabled_modules[@]}"; do
+    src="$DOTFILES_DIR/zsh/${mod}.zsh"
+    [ -f "$src" ] || continue
+    safe_link "$src" "$HOME/.config/zsh/${mod}.zsh" ".config/zsh/${mod}.zsh"
+done
+
+# --- Claude Code config (module-aware) ---
+
+if module_enabled "ai"; then
+    echo "Symlinking Claude config..."
+    mkdir -p "$HOME/.claude"
+
+    # Symlink base CLAUDE.md
+    safe_link "$DOTFILES_DIR/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md" ".claude/CLAUDE.md"
+
+    # Symlink module-specific Claude rules
+    if [ -d "$DOTFILES_DIR/claude/rules" ]; then
+        mkdir -p "$HOME/.claude/rules"
+
+        # Clean stale rule symlinks
+        for existing in "$HOME"/.claude/rules/*; do
+            [ -L "$existing" ] || continue
+            link_target=$(readlink "$existing")
+            if [[ "$link_target" == "$DOTFILES_DIR/claude/rules/"* ]]; then
+                rm "$existing"
+            fi
+        done
+
+        for rule in "$DOTFILES_DIR"/claude/rules/*; do
+            [ -f "$rule" ] || continue
+            rule_name=$(basename "$rule" .md)
+
+            # Only install rule if its module is enabled
+            if module_enabled "$rule_name"; then
+                safe_link "$rule" "$HOME/.claude/rules/$rule_name.md" ".claude/rules/$rule_name.md"
+            else
+                echo "  Skipping .claude/rules/$rule_name.md (module '$rule_name' not enabled)"
+            fi
+        done
+    fi
+
+    # Symlink non-generated files (keybindings.json, settings.json, etc.)
+    for file in "$DOTFILES_DIR"/claude/*.json; do
+        [ -e "$file" ] || continue
+        filename=$(basename "$file")
+        safe_link "$file" "$HOME/.claude/$filename" ".claude/$filename"
+    done
+
+    # Symlink Claude agents
+    if [ -d "$DOTFILES_DIR/claude/agents" ]; then
+        mkdir -p "$HOME/.claude/agents"
+        for file in "$DOTFILES_DIR"/claude/agents/*; do
+            [ -e "$file" ] || continue
+            filename=$(basename "$file")
+            safe_link "$file" "$HOME/.claude/agents/$filename" ".claude/agents/$filename"
+        done
+    fi
+
+    # Symlink Claude hooks (module-filtered)
     mkdir -p "$HOME/.claude/hooks"
-    for file in "$DOTFILES_DIR"/claude/hooks/*; do
-        [ -e "$file" ] || continue
-        filename=$(basename "$file")
-        target="$HOME/.claude/hooks/$filename"
-        if [ -e "$target" ] && [ ! -L "$target" ]; then
-            echo "  Backing up existing $target to $target.backup"
-            mv "$target" "$target.backup"
+    # Module-specific hooks (in subdirectories named after modules)
+    for hookdir in "$DOTFILES_DIR"/claude/hooks/*/; do
+        [ -d "$hookdir" ] || continue
+        mod=$(basename "$hookdir")
+        if ! module_enabled "$mod"; then
+            echo "  Skipping claude hooks/$mod/ (module '$mod' not enabled)"
+            continue
         fi
-        ln -sf "$file" "$target"
-        chmod +x "$file"
-        echo "  Linked .claude/hooks/$filename"
+        for file in "$hookdir"*; do
+            [ -f "$file" ] || continue
+            filename=$(basename "$file")
+            safe_link "$file" "$HOME/.claude/hooks/$filename" ".claude/hooks/$filename (from $mod)"
+            chmod +x "$file"
+        done
     done
 fi
 
-# Symlink Codex skills
-if [ -f "$DOTFILES_DIR/codex/AGENTS.md" ]; then
+# --- Codex config ---
+
+if module_enabled "ai"; then
     echo "Symlinking Codex guidance..."
     mkdir -p "$HOME/.codex"
-    target="$HOME/.codex/AGENTS.md"
-    if [ -e "$target" ] && [ ! -L "$target" ]; then
-        echo "  Backing up existing $target to $target.backup"
-        mv "$target" "$target.backup"
+
+    # Symlink AGENTS.md (single file, jj instructions self-guard with .jj/ check)
+    if [ -f "$DOTFILES_DIR/codex/AGENTS.md" ]; then
+        safe_link "$DOTFILES_DIR/codex/AGENTS.md" "$HOME/.codex/AGENTS.md" ".codex/AGENTS.md"
     fi
-    ln -sf "$DOTFILES_DIR/codex/AGENTS.md" "$target"
-    echo "  Linked .codex/AGENTS.md"
+
+    # Symlink skills
+    if [ -d "$DOTFILES_DIR/codex/skills" ]; then
+        echo "Symlinking Codex skills..."
+        mkdir -p "$HOME/.codex/skills"
+        for skill in "$DOTFILES_DIR"/codex/skills/*; do
+            [ -e "$skill" ] || continue
+            skill_name=$(basename "$skill")
+            target="$HOME/.codex/skills/$skill_name"
+            if [ -e "$target" ] && [ ! -L "$target" ]; then
+                echo "  Backing up existing $target to $target.backup"
+                mv "$target" "$target.backup"
+            fi
+            ln -sfn "$skill" "$target"
+            echo "  Linked .codex/skills/$skill_name"
+        done
+    fi
 fi
 
-if [ -d "$DOTFILES_DIR/codex/skills" ]; then
-    echo "Symlinking Codex skills..."
-    mkdir -p "$HOME/.codex/skills"
-    for skill in "$DOTFILES_DIR"/codex/skills/*; do
-        [ -e "$skill" ] || continue
-        skill_name=$(basename "$skill")
-        target="$HOME/.codex/skills/$skill_name"
-        if [ -e "$target" ] && [ ! -L "$target" ]; then
-            echo "  Backing up existing $target to $target.backup"
-            mv "$target" "$target.backup"
-        fi
-        ln -sfn "$skill" "$target"
-        echo "  Linked .codex/skills/$skill_name"
-    done
-fi
+# --- iTerm2 dynamic profiles ---
 
-# Symlink iTerm2 dynamic profiles
 if [ -d "$DOTFILES_DIR/iterm" ]; then
     echo "Symlinking iTerm2 dynamic profiles..."
     mkdir -p "$HOME/Library/Application Support/iTerm2/DynamicProfiles"
     for file in "$DOTFILES_DIR"/iterm/*.json; do
         [ -e "$file" ] || continue
         filename=$(basename "$file")
-        target="$HOME/Library/Application Support/iTerm2/DynamicProfiles/$filename"
-        if [ -e "$target" ] && [ ! -L "$target" ]; then
-            echo "  Backing up existing $target to $target.backup"
-            mv "$target" "$target.backup"
-        fi
-        ln -sf "$file" "$target"
-        echo "  Linked iTerm2/DynamicProfiles/$filename"
+        safe_link "$file" "$HOME/Library/Application Support/iTerm2/DynamicProfiles/$filename" "iTerm2/DynamicProfiles/$filename"
     done
 fi
 
-# Install mise-managed tools (node, etc.)
-if command -v mise &> /dev/null; then
+# --- Post-install: runtime tools ---
+
+if module_enabled "tools" && command -v mise &> /dev/null; then
     echo "Installing mise tools..."
     mise install --yes
 fi
 
-# Install yazi packages (flavors/plugins declared in config/yazi/package.toml)
-if command -v ya &> /dev/null; then
+if module_enabled "tools" && command -v ya &> /dev/null; then
     echo "Installing yazi packages..."
     ya pkg install
 fi
 
-# Rebuild bat theme cache (picks up custom themes from ~/.config/bat/themes/)
 if command -v bat &> /dev/null; then
     echo "Rebuilding bat theme cache..."
     bat cache --build
 fi
 
-# Install Claude Code via native installer (auto-upgrades)
-if ! command -v claude &> /dev/null; then
+if module_enabled "ai" && ! command -v claude &> /dev/null; then
     echo "Installing Claude Code..."
     curl -fsSL https://claude.ai/install.sh | bash
 fi
 
-# Import shell history into atuin (idempotent - skips already-imported entries)
-if command -v atuin &> /dev/null; then
+if module_enabled "tools" && command -v atuin &> /dev/null; then
     echo "Importing shell history into atuin..."
     atuin import auto
 fi
 
 # Ensure WezTerm IPC state directory exists
-mkdir -p "$HOME/.local/state/wezterm"
+if module_enabled "wezterm"; then
+    mkdir -p "$HOME/.local/state/wezterm"
+fi
 
 echo ""
 echo "Done!"
 
-# Collect pending post-install tasks
+# --- Post-install reminders ---
+
 todos=()
-if [ ! -f "$HOME/.gitconfig.local" ]; then
+if module_enabled "git" && [ ! -f "$HOME/.gitconfig.local" ]; then
     todos+=("  cp $DOTFILES_DIR/home/.gitconfig.local.example ~/.gitconfig.local")
 fi
 if [ ! -f "$HOME/.zshrc.local" ]; then
     todos+=("  cp $DOTFILES_DIR/home/.zshrc.local.example ~/.zshrc.local")
 fi
-if [ ! -f "$HOME/.config/jj/conf.d/local.toml" ] && [ -f "$DOTFILES_DIR/config/jj/conf.d/local.toml.example" ]; then
+if module_enabled "jj" && [ ! -f "$HOME/.config/jj/conf.d/local.toml" ] && [ -f "$DOTFILES_DIR/config/jj/conf.d/local.toml.example" ]; then
     todos+=("  cp $DOTFILES_DIR/config/jj/conf.d/local.toml.example ~/.config/jj/conf.d/local.toml")
 fi
-if [ ! -f "$HOME/.config/wezterm/projects.lua" ]; then
+if module_enabled "wezterm" && [ ! -f "$HOME/.config/wezterm/projects.lua" ]; then
     todos+=("  cp $DOTFILES_DIR/config/wezterm/projects.lua.example ~/.config/wezterm/projects.lua")
 fi
 
