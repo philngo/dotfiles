@@ -18,7 +18,7 @@ vim modules.conf
 ./install.sh
 ```
 
-`install.sh` is idempotent — safe to re-run anytime. It installs Homebrew (if needed), installs packages for enabled modules, and symlinks config files to the right places. If `modules.conf` doesn't exist, it defaults to `all`.
+`install.sh` is idempotent — safe to re-run anytime. It installs Homebrew (if needed), installs packages for enabled modules, and symlinks config files to the right places.
 
 After install, follow the post-install reminders printed at the end (local config files, macOS defaults, etc.).
 
@@ -70,6 +70,18 @@ cp ~/dev/dotfiles/config/jj/conf.d/local.toml.example ~/.config/jj/conf.d/local.
 
 Machine-specific Homebrew packages go in `brew/local.Brewfile` (also git-ignored).
 
+### Updating packages
+
+```bash
+# Re-run to install any new packages for enabled modules
+./install.sh
+
+# Or manually for a specific Brewfile
+brew bundle --file=brew/tools.Brewfile
+```
+
+## Contributing
+
 ### Adding a new dotfile
 
 1. Place it in `home/` (for `~/`) or `config/` (for `~/.config/`)
@@ -85,16 +97,10 @@ Machine-specific Homebrew packages go in `brew/local.Brewfile` (also git-ignored
 
 Users with `all` in their `modules.conf` pick it up automatically.
 
-### Updating packages
+### Capturing installed packages
 
 ```bash
-# Install packages for enabled modules
-./install.sh
-
-# Or manually for a specific Brewfile
-brew bundle --file=brew/tools.Brewfile
-
-# Capture currently installed packages (useful for auditing)
+# Dump everything currently installed (useful for auditing drift)
 brew bundle dump --force
 ```
 
