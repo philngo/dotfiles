@@ -36,8 +36,29 @@ config.colors = {
 	},
 }
 
+-- Workspace switch via file-based IPC (used by Claude Code notification click handler)
+local switch_file = os.getenv("HOME") .. "/.local/state/wezterm/switch-workspace"
+
+local function check_workspace_switch(window)
+	local f = io.open(switch_file, "r")
+	if not f then return end
+	local target = f:read("*l")
+	f:close()
+	os.remove(switch_file)
+	if target and target ~= "" and target ~= window:active_workspace() then
+		window:perform_action(act.SwitchToWorkspace({ name = target }), window:active_pane())
+	end
+end
+
+wezterm.on("window-focus-changed", function(window, pane)
+	if window:is_focused() then
+		check_workspace_switch(window)
+	end
+end)
+
 -- Show workspace name in right status
 wezterm.on("update-right-status", function(window)
+	check_workspace_switch(window)
 	window:set_right_status(wezterm.format({
 		{ Foreground = { Color = "#89b4fa" } },
 		{ Text = " " .. window:active_workspace() .. " " },

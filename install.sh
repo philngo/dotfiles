@@ -105,6 +105,23 @@ if [ -d "$DOTFILES_DIR/claude/agents" ]; then
     done
 fi
 
+# Symlink Claude hooks
+if [ -d "$DOTFILES_DIR/claude/hooks" ]; then
+    mkdir -p "$HOME/.claude/hooks"
+    for file in "$DOTFILES_DIR"/claude/hooks/*; do
+        [ -e "$file" ] || continue
+        filename=$(basename "$file")
+        target="$HOME/.claude/hooks/$filename"
+        if [ -e "$target" ] && [ ! -L "$target" ]; then
+            echo "  Backing up existing $target to $target.backup"
+            mv "$target" "$target.backup"
+        fi
+        ln -sf "$file" "$target"
+        chmod +x "$file"
+        echo "  Linked .claude/hooks/$filename"
+    done
+fi
+
 # Symlink Codex skills
 if [ -f "$DOTFILES_DIR/codex/AGENTS.md" ]; then
     echo "Symlinking Codex guidance..."
@@ -180,6 +197,9 @@ if command -v atuin &> /dev/null; then
     echo "Importing shell history into atuin..."
     atuin import auto
 fi
+
+# Ensure WezTerm IPC state directory exists
+mkdir -p "$HOME/.local/state/wezterm"
 
 echo ""
 echo "Done!"

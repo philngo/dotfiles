@@ -6,6 +6,7 @@ tap "dmmulroy/tap"
 # CLI tools
 brew "git"
 brew "gh"
+brew "terminal-notifier"
 brew "jj"
 brew "jq"
 brew "ag"

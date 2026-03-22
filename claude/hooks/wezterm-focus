@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Called when user clicks a Claude Code notification.
+# Writes the target workspace to a file and activates WezTerm.
+set -euo pipefail
+
+workspace="${1:?Usage: wezterm-focus <workspace>}"
+
+state_dir="$HOME/.local/state/wezterm"
+mkdir -p "$state_dir"
+echo "$workspace" > "$state_dir/switch-workspace"
+
+osascript -e 'tell application "WezTerm" to activate'
