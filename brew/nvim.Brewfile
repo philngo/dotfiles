@@ -1,0 +1,5 @@
+brew "neovim"
+brew "cmake"
+brew "lua"
+brew "tree-sitter"
+brew "tree-sitter-cli"
