@@ -1,138 +1,164 @@
 # Dotfiles
 
-Personal dotfiles and system configuration for macOS.
+Personal macOS dotfiles. Module-based — pick what you need, skip what you don't.
 
-## New Machine Setup
+Catppuccin Mocha everywhere. Vim keybindings everywhere.
+
+## Quickstart
 
 ```bash
-# 1. Clone the repo
 git clone https://github.com/philngo/dotfiles.git ~/dev/dotfiles
 cd ~/dev/dotfiles
 
-# 2. Install packages and symlink dotfiles
+# Choose your modules (or use "all")
+cp modules.conf.example modules.conf
+vim modules.conf
+
+# Install
 ./install.sh
-
-# 3. Apply macOS system preferences
-./macos/defaults.sh
-
-# 4. Follow manual setup guide
-open docs/manual-setup.md
 ```
 
-## Structure
+`install.sh` is idempotent — safe to re-run anytime. It installs Homebrew (if needed), installs packages for enabled modules, and symlinks config files to the right places.
+
+After install, follow the post-install reminders printed at the end (local config files, macOS defaults, etc.).
+
+## Modules
+
+| Module | What you get |
+|--------|-------------|
+| **core** | Zsh (history, completions, aliases), Starship prompt, bat, eza, fzf, fd, ripgrep, Nerd Font |
+| **git** | Git config, delta (side-by-side diffs), lazygit, shell functions (`gs`, `gbd`, `grm`, `gcm`, `gf`) |
+| **jj** | Jujutsu VCS config, jj-starship prompt, shell functions (`js`, `jjs`, `jr`, `vb`, `jw-add`, `jw-rm`, `jw-list`) |
+| **nvim** | Neovim with lazy.nvim, 40+ plugins, LSP, Treesitter, Telescope |
+| **wezterm** | WezTerm terminal — project workspaces, pane/tab keybindings, dev layouts |
+| **wm** | AeroSpace tiling window manager + JankyBorders |
+| **ai** | Claude Code + Codex — user instructions, agents, hooks, skills |
+| **tools** | yazi, atuin, direnv, mise, zoxide, gh, glow, and more |
+| **apps** | GUI apps — Slack, Zoom, VS Code, Spotify, Figma, Alfred, etc. |
+
+Use `all` in `modules.conf` to enable everything (automatically picks up new modules):
 
 ```
-├── home/                       # Symlinked to ~/
-│   ├── .zshrc
-│   ├── .zshrc.local.example    # Template for machine-specific config
-│   ├── .zprofile
-│   ├── .gitconfig
-│   ├── .gitconfig.local.example
-│   ├── .gitignore              # Global git ignore
-│   ├── .mise.toml              # Tool versions (node, etc.)
-│   ├── .cheatsheet             # Personal keybinding reference
-│   └── .aerospace.toml         # Window manager config
-├── config/                     # Symlinked to ~/.config/
-│   ├── nvim/                   # Neovim config (lazy.nvim)
-│   ├── jj/                     # Jujutsu VCS config
-│   └── starship.toml           # Prompt config
-├── codex/
-│   ├── AGENTS.md               # User-scoped Codex instructions, symlinked to ~/.codex/AGENTS.md
-│   └── skills/                 # Codex custom skills, symlinked to ~/.codex/skills/
-├── claude/
-│   ├── agents/                 # Claude Code custom agents
-│   └── hooks/                  # Claude Code hook scripts (notification → WezTerm focus)
-├── iterm/
-│   └── profiles.json           # iTerm2 dynamic profile (Catppuccin Mocha)
-├── macos/
-│   └── defaults.sh             # System preferences script
-├── docs/                       # Manual setup guides
-│   ├── manual-setup.md
-│   ├── firefox.md
-│   └── iterm.md
-├── Brewfile                    # Homebrew packages
-└── install.sh                  # Bootstrap script
+all
+```
+
+Or list only what you need:
+
+```
+core
+git
+nvim
+wezterm
+ai
 ```
 
 ## Usage
 
-### Keeping dotfiles updated
+### Cheatsheet
 
-Files are symlinked, so edits anywhere are reflected in the repo:
-
-```bash
-# Edit directly (both point to same file)
-vim ~/.zshrc
-vim ~/dev/dotfiles/home/.zshrc
-
-# Commit changes
-cd ~/dev/dotfiles
-git add -A && git commit -m "Update zshrc"
-git push
-```
+Run `cs` (or `cheatsheet`) to view keybindings for all tools in the terminal.
 
 ### Machine-specific config
 
 Some settings vary per machine (git email, paths, etc.). These use `.local` files that aren't tracked:
 
 ```bash
-# Set up local overrides (copy from examples)
 cp ~/dev/dotfiles/home/.gitconfig.local.example ~/.gitconfig.local
 cp ~/dev/dotfiles/home/.zshrc.local.example ~/.zshrc.local
-
-# Edit with your machine-specific values
-vim ~/.gitconfig.local
+cp ~/dev/dotfiles/config/jj/conf.d/local.toml.example ~/.config/jj/conf.d/local.toml
 ```
+
+Machine-specific Homebrew packages go in `brew/local.Brewfile` (also git-ignored).
 
 ### Adding a new dotfile
 
-1. Move the file into `home/` or `config/` as appropriate
-2. Run `./install.sh` to create the symlink
-3. Commit the changes
+1. Place it in `home/` (for `~/`) or `config/` (for `~/.config/`)
+2. If it belongs to a specific module, add the mapping in `install.sh` (`home_module` or `config_module`)
+3. Run `./install.sh`
 
-### Managing Codex skills
+### Adding a new module
 
-Repo-managed Codex skills live in `codex/skills/`. `./install.sh` symlinks each top-level skill directory into `~/.codex/skills/`, which keeps Codex-managed entries like `~/.codex/skills/.system/` intact.
+1. Create `brew/<name>.Brewfile` with its packages
+2. Optionally create `zsh/<name>.zsh` for shell integrations
+3. Add config dirs/home files and update the mappings in `install.sh`
+4. Add the module to `modules.conf.example`
 
-### Managing Codex guidance
-
-Repo-managed Codex user guidance lives in `codex/AGENTS.md`. `./install.sh` symlinks it to `~/.codex/AGENTS.md`, which Codex loads as global personal guidance.
-
-### Claude Code notifications
-
-When Claude Code is waiting for permission approval in one WezTerm workspace and you're working in another, a macOS notification is sent automatically. Clicking it brings you to the correct workspace.
-
-**How it works:**
-
-1. Claude Code fires a `Notification` hook on `permission_prompt` events
-2. `claude/hooks/claude-notify` detects the WezTerm workspace via `$WEZTERM_PANE` and sends a notification via `terminal-notifier`
-3. Clicking the notification runs `claude/hooks/wezterm-focus`, which writes the workspace name to `~/.local/state/wezterm/switch-workspace` and activates WezTerm
-4. WezTerm's `window-focus-changed` event reads the file and switches to the target workspace
-
-**Requirements:** `terminal-notifier` (installed via Brewfile), `jq`, `wezterm`.
+Users with `all` in their `modules.conf` pick it up automatically.
 
 ### Updating packages
 
 ```bash
-# Add new packages to Brewfile, then:
-brew bundle
+# Install packages for enabled modules
+./install.sh
 
-# Or dump currently installed packages:
+# Or manually for a specific Brewfile
+brew bundle --file=brew/tools.Brewfile
+
+# Capture currently installed packages (useful for auditing)
 brew bundle dump --force
 ```
 
-### macOS defaults
+## Advanced
 
-System preferences are stored in `macos/defaults.sh`. Run it to apply settings:
+### How install.sh works
+
+Symlink-based, no stow. `install.sh` reads `modules.conf`, then:
+
+1. Concatenates `brew/<module>.Brewfile` for enabled modules → single `brew bundle`
+2. Symlinks `home/*` → `~/`, filtered by module ownership
+3. Recursively symlinks individual files in `config/*` → `~/.config/` (not whole directories, to avoid clobbering unmanaged files)
+4. Symlinks `zsh/<module>.zsh` → `~/.config/zsh/` for enabled modules
+5. Picks `starship-jj.toml` or `starship-git.toml` based on whether jj module is enabled
+6. Symlinks Claude rules from `claude/rules/` for enabled modules (uses `~/.claude/rules/` directory)
+7. Symlinks Claude hooks from `claude/hooks/<module>/` for enabled modules
+8. Runs post-install steps (mise, yazi plugins, bat theme cache, etc.)
+
+Existing non-symlink files are backed up to `*.backup` before overwriting.
+
+### Directory layout
+
+```
+modules.conf.example        # All modules listed — copy to modules.conf
+brew/                        # Per-module Brewfiles + local.Brewfile (git-ignored)
+zsh/                         # Per-module shell configs → ~/.config/zsh/
+  core.zsh                   #   history, completions, aliases, prompt, plugins
+  git.zsh                    #   git functions (gs, gbd, grm, gcm)
+  jj.zsh                     #   jj functions (js, jjs, jr, vb, jw-*)
+  tools.zsh                  #   mise, direnv, zoxide, atuin, yazi
+home/                        # Dotfiles → ~/
+config/                      # Configs → ~/.config/
+  starship-git.toml          #   prompt variant (git-only)
+  starship-jj.toml           #   prompt variant (jj-starship)
+  nvim/                      #   Neovim (lazy.nvim, plugins in lua/plugins/init.lua)
+  wezterm/                   #   WezTerm (projects.lua is git-ignored)
+  jj/                        #   Jujutsu VCS
+  atuin/                     #   Shell history
+  yazi/                      #   File manager
+  bat/                       #   Syntax highlighting themes
+  delta/                     #   Git diff pager themes
+claude/
+  CLAUDE.md                  # Base user instructions → ~/.claude/CLAUDE.md
+  rules/jj.md               # jj workflow rules → ~/.claude/rules/ (if jj enabled)
+  hooks/wezterm/             # Notification hooks (if wezterm enabled)
+  agents/                    # Custom agents → ~/.claude/agents/
+codex/
+  AGENTS.md                  # User instructions → ~/.codex/AGENTS.md
+  skills/                    # Custom skills → ~/.codex/skills/
+iterm/                       # iTerm2 dynamic profiles
+macos/defaults.sh            # macOS system preferences
+docs/                        # Manual setup guides
+```
+
+### Claude Code notifications
+
+When Claude Code is waiting for permission in one WezTerm workspace and you're in another, a macOS notification is sent. Clicking it switches to the right workspace.
+
+Requires the `wezterm` module. The hooks (`claude-notify`, `wezterm-focus`) are in `claude/hooks/wezterm/` and only installed when that module is enabled.
+
+### macOS defaults
 
 ```bash
 ./macos/defaults.sh
 ```
 
-## Manual Setup
-
-See `docs/` for configuration that can't be automated:
-
-- [manual-setup.md](docs/manual-setup.md) - System preferences, app settings, SSH keys
-- [firefox.md](docs/firefox.md) - Firefox configuration
-- [iterm.md](docs/iterm.md) - iTerm2 configuration
+See `docs/manual-setup.md` for settings that can't be automated (trackpad, Touch ID, display arrangement, etc.).
