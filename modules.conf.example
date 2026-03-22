@@ -1,0 +1,16 @@
+# Enabled modules — one per line, # for comments.
+# Copy to modules.conf and remove what you don't need.
+#
+# Profiles:
+#   Full dev:    all modules enabled
+#   Vibe coding: core git nvim wezterm ai
+
+core        # shell basics, prompt, nice CLI aliases (eza, bat), font, zsh plugins
+git         # git config, delta diffs, git shell functions
+jj          # Jujutsu VCS, jj-starship prompt, jj shell functions
+nvim        # Neovim editor + full plugin setup
+wezterm     # WezTerm terminal emulator
+wm          # AeroSpace window manager + JankyBorders
+ai          # Claude Code, Codex — configs, agents, hooks, skills
+tools       # power-user CLI: yazi, atuin, direnv, mise, zoxide, gh, etc.
+apps        # GUI apps: slack, zoom, spotify, figma, vscode, etc.

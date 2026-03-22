@@ -2,6 +2,8 @@
 home/.zshrc.local
 home/.gitconfig.local
 config/wezterm/projects.lua
+modules.conf
+brew/local.Brewfile
 
 # Claude Code project settings
 .claude/
