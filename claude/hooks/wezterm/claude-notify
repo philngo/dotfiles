@@ -1,33 +1,23 @@
 #!/usr/bin/env bash
 # Called by Claude Code Notification hook on permission_prompt events.
-# Sends a macOS notification that, when clicked, focuses the correct WezTerm workspace.
+# Sends a macOS notification and writes the workspace so WezTerm auto-focuses on switch.
 set -euo pipefail
-
-# Require terminal-notifier and wezterm
-command -v terminal-notifier &>/dev/null || exit 0
-command -v wezterm &>/dev/null || exit 0
 
 # Read hook input from stdin
 input=$(cat)
 title=$(echo "$input" | jq -r '.title // "Claude Code"')
 message=$(echo "$input" | jq -r '.message // "Needs attention"')
 
-# Look up current workspace from WezTerm pane
-workspace=""
+# Send notification via osascript (terminal-notifier is throttled on macOS 26+)
+osascript -e "display notification \"$message\" with title \"$title\" sound name \"default\"" &
+
+# Write workspace so WezTerm auto-focuses on switch
 if [ -n "${WEZTERM_PANE:-}" ]; then
+    command -v wezterm &>/dev/null || exit 0
     workspace=$(wezterm cli list --format json 2>/dev/null \
         | jq -r --arg pane "$WEZTERM_PANE" '.[] | select(.pane_id == ($pane | tonumber)) | .workspace' 2>/dev/null || true)
+    if [ -n "$workspace" ]; then
+        mkdir -p ~/.local/state/wezterm
+        echo "$workspace" > ~/.local/state/wezterm/switch-workspace
+    fi
 fi
-
-# Build notification
-args=(
-    -title "$title"
-    -message "$message"
-    -group "claude-code-$$"
-)
-
-if [ -n "$workspace" ]; then
-    args+=(-execute "$HOME/.claude/hooks/wezterm-focus '$workspace'")
-fi
-
-terminal-notifier "${args[@]}"

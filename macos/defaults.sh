@@ -116,6 +116,15 @@ defaults write com.googlecode.iterm2 HideTab -bool false
 defaults write com.googlecode.iterm2 StretchTabsToFillBar -bool false
 
 # =============================================================================
+# Manual Steps (cannot be scripted due to macOS restrictions)
+# =============================================================================
+
+# Notifications for Claude Code permission prompts (via osascript):
+#   System Settings > Notifications > Script Editor
+#   - Allow Notifications: ON
+#   - Alert style: Alerts (not Banners — Banners auto-dismiss and are easy to miss)
+
+# =============================================================================
 # Apply changes
 # =============================================================================
 
