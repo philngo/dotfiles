@@ -138,6 +138,7 @@ jw-add() {
     return 1
   fi
   jj workspace add "$ws_path" --name "$(basename "$root")-${suffix}"
+  touch ~/.config/wezterm/projects.lua 2>/dev/null
   echo "Created workspace at $ws_path"
 }
 
@@ -155,6 +156,7 @@ jw-rm() {
   else
     echo "Forgot workspace '$name' (no directory found)"
   fi
+  touch ~/.config/wezterm/projects.lua 2>/dev/null
 }
 
 # List workspaces

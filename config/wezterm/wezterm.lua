@@ -71,15 +71,32 @@ local base_projects = {
 	},
 }
 
+-- Auto-discover jj workspace directories (sibling dirs like project-1, project-2)
+local function discover_workspaces(project_list)
+	local result = {}
+	for _, p in ipairs(project_list) do
+		table.insert(result, p)
+		for i = 1, 9 do
+			local ws_cwd = p.cwd .. "-" .. i
+			if pcall(wezterm.read_dir, ws_cwd) then
+				table.insert(result, {
+					id = p.id .. "_" .. i,
+					label = p.label .. " (WS " .. i .. ")",
+					cwd = ws_cwd,
+					setup = p.setup,
+				})
+			end
+		end
+	end
+	return result
+end
+
 -- Project selector
 local function project_selector()
 	local ok, local_projects = pcall(require, "projects")
-	local projects = {}
-	for _, p in ipairs(base_projects) do
-		table.insert(projects, p)
-	end
+	local projects = discover_workspaces(base_projects)
 	if ok then
-		for _, p in ipairs(local_projects) do
+		for _, p in ipairs(discover_workspaces(local_projects)) do
 			table.insert(projects, p)
 		end
 	end
