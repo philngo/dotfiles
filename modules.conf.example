@@ -1,8 +1,9 @@
 # Enabled modules — one per line, # for comments.
 # Copy to modules.conf and remove what you don't need.
+# Use "all" to enable every module (picks up new modules automatically).
 #
 # Profiles:
-#   Full dev:    all modules enabled
+#   Full dev:    all
 #   Vibe coding: core git nvim wezterm ai
 
 core        # shell basics, prompt, nice CLI aliases (eza, bat), font, zsh plugins

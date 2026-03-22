@@ -17,13 +17,16 @@ if [ ! -f "$MODULES_FILE" ]; then
 fi
 
 enabled_modules=()
+all_modules=false
 while IFS= read -r line; do
     line="${line%%#*}"         # strip comments
     line="$(echo "$line" | tr -d '[:space:]')"  # strip whitespace
     [ -n "$line" ] && enabled_modules+=("$line")
+    [ "$line" = "all" ] && all_modules=true
 done < "$MODULES_FILE"
 
 module_enabled() {
+    $all_modules && return 0
     local mod="$1"
     for m in "${enabled_modules[@]}"; do
         [ "$m" = "$mod" ] && return 0
@@ -31,7 +34,11 @@ module_enabled() {
     return 1
 }
 
-echo "Enabled modules: ${enabled_modules[*]}"
+if $all_modules; then
+    echo "Enabled modules: all"
+else
+    echo "Enabled modules: ${enabled_modules[*]}"
+fi
 
 # --- Module-to-file mappings ---
 # Returns the module that owns a config directory (empty = always install)
@@ -84,13 +91,21 @@ fi
 
 echo "Installing Homebrew packages..."
 tmpfile=$(mktemp)
-for mod in "${enabled_modules[@]}"; do
-    bf="$DOTFILES_DIR/brew/${mod}.Brewfile"
-    if [ -f "$bf" ]; then
+if $all_modules; then
+    for bf in "$DOTFILES_DIR"/brew/*.Brewfile; do
+        [ -f "$bf" ] || continue
         cat "$bf" >> "$tmpfile"
         echo "" >> "$tmpfile"
-    fi
-done
+    done
+else
+    for mod in "${enabled_modules[@]}"; do
+        bf="$DOTFILES_DIR/brew/${mod}.Brewfile"
+        if [ -f "$bf" ]; then
+            cat "$bf" >> "$tmpfile"
+            echo "" >> "$tmpfile"
+        fi
+    done
+fi
 # Include machine-specific local Brewfile if present
 if [ -f "$DOTFILES_DIR/brew/local.Brewfile" ]; then
     cat "$DOTFILES_DIR/brew/local.Brewfile" >> "$tmpfile"
@@ -200,11 +215,19 @@ for existing in "$HOME"/.config/zsh/*.zsh; do
 done
 
 # Install enabled module zsh files
-for mod in "${enabled_modules[@]}"; do
-    src="$DOTFILES_DIR/zsh/${mod}.zsh"
-    [ -f "$src" ] || continue
-    safe_link "$src" "$HOME/.config/zsh/${mod}.zsh" ".config/zsh/${mod}.zsh"
-done
+if $all_modules; then
+    for src in "$DOTFILES_DIR"/zsh/*.zsh; do
+        [ -f "$src" ] || continue
+        name=$(basename "$src")
+        safe_link "$src" "$HOME/.config/zsh/$name" ".config/zsh/$name"
+    done
+else
+    for mod in "${enabled_modules[@]}"; do
+        src="$DOTFILES_DIR/zsh/${mod}.zsh"
+        [ -f "$src" ] || continue
+        safe_link "$src" "$HOME/.config/zsh/${mod}.zsh" ".config/zsh/${mod}.zsh"
+    done
+fi
 
 # --- Claude Code config (module-aware) ---
 
