@@ -80,30 +80,6 @@ Machine-specific Homebrew packages go in `brew/local.Brewfile` (also git-ignored
 brew bundle --file=brew/tools.Brewfile
 ```
 
-## Contributing
-
-### Adding a new dotfile
-
-1. Place it in `home/` (for `~/`) or `config/` (for `~/.config/`)
-2. If it belongs to a specific module, add the mapping in `install.sh` (`home_module` or `config_module`)
-3. Run `./install.sh`
-
-### Adding a new module
-
-1. Create `brew/<name>.Brewfile` with its packages
-2. Optionally create `zsh/<name>.zsh` for shell integrations
-3. Add config dirs/home files and update the mappings in `install.sh`
-4. Add the module to `modules.conf.example`
-
-Users with `all` in their `modules.conf` pick it up automatically.
-
-### Capturing installed packages
-
-```bash
-# Dump everything currently installed (useful for auditing drift)
-brew bundle dump --force
-```
-
 ## Advanced
 
 ### How install.sh works
@@ -168,3 +144,27 @@ Requires the `wezterm` module. The hooks (`claude-notify`, `wezterm-focus`) are 
 ```
 
 See `docs/manual-setup.md` for settings that can't be automated (trackpad, Touch ID, display arrangement, etc.).
+
+## Contributing
+
+### Adding a new dotfile
+
+1. Place it in `home/` (for `~/`) or `config/` (for `~/.config/`)
+2. If it belongs to a specific module, add the mapping in `install.sh` (`home_module` or `config_module`)
+3. Run `./install.sh`
+
+### Adding a new module
+
+1. Create `brew/<name>.Brewfile` with its packages
+2. Optionally create `zsh/<name>.zsh` for shell integrations
+3. Add config dirs/home files and update the mappings in `install.sh`
+4. Add the module to `modules.conf.example`
+
+Users with `all` in their `modules.conf` pick it up automatically.
+
+### Capturing installed packages
+
+```bash
+# Dump everything currently installed (useful for auditing drift)
+brew bundle dump --force
+```
