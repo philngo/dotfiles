@@ -10,7 +10,7 @@ Catppuccin Mocha everywhere. Vim keybindings everywhere.
 git clone https://github.com/philngo/dotfiles.git ~/dev/dotfiles
 cd ~/dev/dotfiles
 
-# Choose your modules (or use "all")
+# Optional: choose your modules (defaults to all if skipped)
 cp modules.conf.example modules.conf
 vim modules.conf
 
