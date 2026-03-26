@@ -12,7 +12,6 @@
       }
     ]
   },
-  "model": "opus",
   "statusLine": {
     "type": "command",
     "command": "bash /Users/philngo/.claude/statusline-command.sh"
