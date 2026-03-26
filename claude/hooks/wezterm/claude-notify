@@ -8,8 +8,9 @@ input=$(cat)
 title=$(echo "$input" | jq -r '.title // "Claude Code"')
 message=$(echo "$input" | jq -r '.message // "Needs attention"')
 
-# Send notification via osascript (terminal-notifier is throttled on macOS 26+)
-osascript -e "display notification \"$message\" with title \"$title\" sound name \"default\"" &
+# Send notification via terminal-notifier; clicking it activates WezTerm
+terminal-notifier -title "$title" -message "$message" -sound default \
+    -activate com.github.wez.wezterm &
 
 # Write workspace so WezTerm auto-focuses on switch
 if [ -n "${WEZTERM_PANE:-}" ]; then
