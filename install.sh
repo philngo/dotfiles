@@ -374,6 +374,21 @@ if module_enabled "wezterm"; then
     mkdir -p "$HOME/.local/state/wezterm"
 fi
 
+# Mobile dev: install Xcode and point xcode-select at it
+if module_enabled "mobile" && command -v mas &> /dev/null; then
+    if [ ! -d "/Applications/Xcode.app" ]; then
+        echo "Installing Xcode from the Mac App Store (this may take a while)..."
+        mas install 497799835  # Xcode
+    fi
+    if [ -d "/Applications/Xcode.app" ]; then
+        current_dev_dir=$(xcode-select -p 2>/dev/null || true)
+        if [ "$current_dev_dir" != "/Applications/Xcode.app/Contents/Developer" ]; then
+            echo "Switching xcode-select to Xcode.app (requires sudo)..."
+            sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+        fi
+    fi
+fi
+
 echo ""
 echo "Done!"
 
