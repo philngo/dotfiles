@@ -93,12 +93,20 @@ local base_projects = {
 }
 
 -- Auto-discover jj workspace directories (sibling dirs like project-1, project-2)
+-- If a project has a `root` field (repo root differs from cwd), the suffix is
+-- appended to root and the relative subdir is preserved:
+--   root=~/dev/Jump, cwd=~/dev/Jump/api → discovers ~/dev/Jump-1/api
 local function discover_workspaces(project_list)
 	local result = {}
 	for _, p in ipairs(project_list) do
 		table.insert(result, p)
+		local base = p.root or p.cwd
+		local subdir = ""
+		if p.root and p.cwd:sub(1, #p.root) == p.root then
+			subdir = p.cwd:sub(#p.root + 1)
+		end
 		for i = 1, 9 do
-			local ws_cwd = p.cwd .. "-" .. i
+			local ws_cwd = base .. "-" .. i .. subdir
 			if pcall(wezterm.read_dir, ws_cwd) then
 				table.insert(result, {
 					id = p.id .. "_" .. i,

@@ -42,7 +42,7 @@ ya pkg install            # Install yazi plugins from config/yazi/package.toml
 - `home/` — dotfiles symlinked to `~/` (zshrc, gitconfig, aerospace.toml, etc.)
 - `config/` — configs symlinked to `~/.config/` (nvim, wezterm, jj, atuin, yazi, bat, delta)
 - `config/starship-git.toml` / `config/starship-jj.toml` — starship prompt variants; install.sh picks based on jj module
-- `config/wezterm/` — Wezterm terminal config; `projects.lua` is machine-specific (git-ignored), template at `projects.lua.example`
+- `config/wezterm/` — Wezterm terminal config; `projects.lua` is machine-specific (git-ignored), template at `projects.lua.example`. Projects support an optional `root` field for monorepo subdirectories — jj workspace discovery appends `-N` to root and preserves the relative subdir (e.g. `root=~/dev/Foo`, `cwd=~/dev/Foo/api` discovers `~/dev/Foo-1/api`)
 - `config/nvim/` — Neovim config using lazy.nvim; plugins defined in `lua/plugins/init.lua`; uses native Neovim 0.11+ LSP API (no nvim-lspconfig)
 - `claude/CLAUDE.md` — base user-scoped Claude Code instructions, symlinked to `~/.claude/CLAUDE.md`
 - `claude/rules/` — module-specific Claude rules (e.g. `jj.md`), selectively symlinked to `~/.claude/rules/`
