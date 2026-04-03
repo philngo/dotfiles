@@ -1,3 +1,6 @@
+# postgresql (keg-only, needs explicit PATH)
+export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
+
 # mise (tool version manager)
 command -v mise &>/dev/null && eval "$(mise activate zsh)"
 
