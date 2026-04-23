@@ -137,6 +137,8 @@ When Claude Code is waiting for permission in one WezTerm workspace and you're i
 
 Requires the `wezterm` module. The hooks (`claude-notify`, `wezterm-focus`) are in `claude/hooks/wezterm/` and only installed when that module is enabled.
 
+**First-time setup:** grant notification permission to `terminal-notifier` in **System Settings → Notifications**. Without this, the hook runs successfully but no banner appears. Also make sure **Do Not Disturb / Focus** isn't on — DND silently suppresses banners.
+
 ### macOS defaults
 
 ```bash

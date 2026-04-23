@@ -407,6 +407,9 @@ fi
 if module_enabled "wezterm" && [ ! -f "$HOME/.config/wezterm/projects.lua" ]; then
     todos+=("  cp $DOTFILES_DIR/config/wezterm/projects.lua.example ~/.config/wezterm/projects.lua")
 fi
+if module_enabled "wezterm"; then
+    todos+=("  Grant notification permission: System Settings → Notifications → terminal-notifier (for Claude Code permission alerts)")
+fi
 
 if [ ${#todos[@]} -gt 0 ]; then
     echo ""
