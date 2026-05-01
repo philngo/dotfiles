@@ -199,6 +199,7 @@ return {
           "ts_ls",
           "jsonls",
         },
+        automatic_enable = false,
       })
     end,
   },
