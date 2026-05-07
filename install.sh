@@ -364,6 +364,11 @@ if module_enabled "ai" && ! command -v claude &> /dev/null; then
     curl -fsSL https://claude.ai/install.sh | bash
 fi
 
+if module_enabled "ai" && command -v claude &> /dev/null; then
+    echo "Installing Claude Code plugins..."
+    claude plugin install superpowers@claude-plugins-official 2>/dev/null || true
+fi
+
 if module_enabled "tools" && command -v atuin &> /dev/null; then
     echo "Importing shell history into atuin..."
     atuin import auto
@@ -409,6 +414,9 @@ if module_enabled "wezterm" && [ ! -f "$HOME/.config/wezterm/projects.lua" ]; th
 fi
 if module_enabled "wezterm"; then
     todos+=("  Grant notification permission: System Settings → Notifications → terminal-notifier (for Claude Code permission alerts)")
+fi
+if module_enabled "ai" && command -v codex &> /dev/null; then
+    todos+=("  Install superpowers in Codex: run /plugins in a Codex session and search for 'superpowers'")
 fi
 
 if [ ${#todos[@]} -gt 0 ]; then
