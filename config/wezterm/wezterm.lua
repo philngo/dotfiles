@@ -195,6 +195,21 @@ end
 -- Disable default keybindings, rebuild from scratch
 config.disable_default_key_bindings = true
 
+-- Ctrl+click always opens links, even when the foreground program
+-- (e.g. Claude Code's TUI) has grabbed mouse reporting.
+config.mouse_bindings = {
+	{
+		event = { Down = { streak = 1, button = "Left" } },
+		mods = "CTRL",
+		action = act.Nop,
+	},
+	{
+		event = { Up = { streak = 1, button = "Left" } },
+		mods = "CTRL",
+		action = act.OpenLinkAtMouseCursor,
+	},
+}
+
 config.keys = {
 	-- Pane: split
 	{ key = "d", mods = "CMD", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
