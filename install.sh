@@ -369,6 +369,22 @@ if module_enabled "ai" && command -v claude &> /dev/null; then
     claude plugin install superpowers@claude-plugins-official 2>/dev/null || true
 fi
 
+if module_enabled "ai" && ! command -v tidewave &> /dev/null; then
+    case "$(uname -m)" in
+        arm64|aarch64) tidewave_arch="aarch64" ;;
+        x86_64)        tidewave_arch="x86_64" ;;
+        *)             tidewave_arch="" ;;
+    esac
+    if [ -n "$tidewave_arch" ]; then
+        echo "Installing Tidewave CLI..."
+        mkdir -p "$HOME/.local/bin"
+        curl -fsSL -o "$HOME/.local/bin/tidewave" \
+            "https://github.com/tidewave-ai/tidewave_app/releases/latest/download/tidewave-cli-${tidewave_arch}-apple-darwin"
+        chmod +x "$HOME/.local/bin/tidewave"
+    fi
+    unset tidewave_arch
+fi
+
 if module_enabled "tools" && command -v atuin &> /dev/null; then
     echo "Importing shell history into atuin..."
     atuin import auto
