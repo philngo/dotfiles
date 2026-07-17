@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# SessionStart hook (also invoked directly by jw-add): keeps Claude Code's
+# per-project memory and .claude/settings.local.json shared across jj sibling
+# workspaces created by jw-add, instead of each one starting from scratch.
+#
+# Detection: a sibling workspace's directory is named "<base>-<N>" (jw-add's
+# own naming convention). If the stripped-suffix sibling "<base>" exists and
+# is confirmed to be the same jj repo, this symlinks memory/settings back to
+# it (mirroring any relative subdirectory, e.g. repo-2/api -> repo/api).
+set -euo pipefail
+
+command -v jj &>/dev/null || exit 0
+
+cwd="$PWD"
+root=$(jj root 2>/dev/null) || exit 0
+
+base_dir=$(dirname "$root")
+ws_name=$(basename "$root")
+
+[[ "$ws_name" =~ ^(.+)-[0-9]+$ ]] || exit 0
+base_name="${BASH_REMATCH[1]}"
+canonical_root="$base_dir/$base_name"
+
+[[ -d "$canonical_root" ]] || exit 0
+
+current_list=$(jj -R "$root" workspace list 2>/dev/null) || exit 0
+canonical_list=$(jj -R "$canonical_root" workspace list 2>/dev/null) || exit 0
+[[ "$current_list" == "$canonical_list" ]] || exit 0
+
+relpath="${cwd#"$root"}"
+canonical_cwd="$canonical_root$relpath"
+
+encode() { printf '%s' "${1//\//-}"; }
+
+cur_proj_dir="$HOME/.claude/projects/$(encode "$cwd")"
+canon_proj_dir="$HOME/.claude/projects/$(encode "$canonical_cwd")"
+
+mkdir -p "$canon_proj_dir/memory"
+mkdir -p "$cur_proj_dir"
+
+if [[ ! -L "$cur_proj_dir/memory" ]]; then
+  if [[ -d "$cur_proj_dir/memory" ]]; then
+    if [[ -n "$(ls -A "$cur_proj_dir/memory" 2>/dev/null)" ]]; then
+      backup="$cur_proj_dir/memory.pre-sync-backup-$(date +%s)"
+      mv "$cur_proj_dir/memory" "$backup"
+      echo "sync-workspace-memory: backed up existing memory to $backup before linking to $canon_proj_dir/memory"
+    else
+      rmdir "$cur_proj_dir/memory"
+    fi
+  fi
+  ln -s "$canon_proj_dir/memory" "$cur_proj_dir/memory"
+fi
+
+canon_settings="$canonical_cwd/.claude/settings.local.json"
+cur_settings="$cwd/.claude/settings.local.json"
+if [[ -f "$canon_settings" && ! -e "$cur_settings" ]]; then
+  mkdir -p "$cwd/.claude"
+  ln -s "$canon_settings" "$cur_settings"
+fi
+
+exit 0
