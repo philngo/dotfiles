@@ -10,7 +10,7 @@ max_height = 1000
 
 [plugin]
 prepend_previewers = [
-  { name = "*.md", run = "glow", sync = true },
+  { url = "*.md", run = "glow" },
 ]
 
 [opener]
