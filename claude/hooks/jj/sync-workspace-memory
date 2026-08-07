@@ -23,6 +23,23 @@ canonical_root="$base_dir/$base_name"
 
 [[ -d "$canonical_root" ]] || exit 0
 
+# Sync personal (gitignored) skills from canonical workspace.
+# Skills tracked by jj propagate automatically; this catches ones in
+# .git/info/exclude that only exist in the canonical working copy.
+# Runs before the workspace-list check since it doesn't need jj state.
+canon_skills="$canonical_root/.agents/skills"
+cur_skills="$root/.agents/skills"
+if [[ -d "$canon_skills" && -d "$cur_skills" ]]; then
+  for skill_dir in "$canon_skills"/*/; do
+    skill_name=$(basename "$skill_dir")
+    if git -C "$canonical_root" check-ignore -q "$skill_dir" 2>/dev/null; then
+      if [[ ! -d "$cur_skills/$skill_name" ]]; then
+        cp -R "$skill_dir" "$cur_skills/$skill_name"
+      fi
+    fi
+  done
+fi
+
 current_list=$(jj -R "$root" workspace list 2>/dev/null) || exit 0
 canonical_list=$(jj -R "$canonical_root" workspace list 2>/dev/null) || exit 0
 [[ "$current_list" == "$canonical_list" ]] || exit 0
