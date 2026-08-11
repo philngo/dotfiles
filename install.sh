@@ -345,6 +345,11 @@ fi
 # --- Post-install: runtime tools ---
 
 if module_enabled "tools" && command -v mise &> /dev/null; then
+    # ~/.mise.toml is a symlink into the repo; mise checks trust against the
+    # real path, so cd'ing into home/ errors out unless it is trusted here.
+    if [ -f "$DOTFILES_DIR/home/.mise.toml" ]; then
+        mise trust --silent "$DOTFILES_DIR/home/.mise.toml"
+    fi
     echo "Installing mise tools..."
     mise install --yes
 fi
