@@ -28,8 +28,9 @@ alias sz="source ~/.zshrc && echo \"Sourced ~/.zshrc\""
 
 # Personal cheatsheet viewer (compiled from per-module YAML files)
 cheatsheet() {
-  local dotfiles_dir
-  dotfiles_dir="$(cd "$(dirname "$(readlink "$HOME/.zshrc")")" && cd .. && pwd)"
+  # :A resolves the symlink without cd'ing (a cd would fire chpwd hooks)
+  local zshrc="$HOME/.zshrc"
+  local dotfiles_dir="${zshrc:A:h:h}"
   local output
   output=$("$dotfiles_dir/bin/cheatsheet" "$@")
   if command -v glow &>/dev/null; then
