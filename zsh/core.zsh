@@ -31,7 +31,7 @@ cheatsheet() {
   local dotfiles_dir
   dotfiles_dir="$(cd "$(dirname "$(readlink "$HOME/.zshrc")")" && cd .. && pwd)"
   local output
-  output=$("$dotfiles_dir/bin/cheatsheet")
+  output=$("$dotfiles_dir/bin/cheatsheet" "$@")
   if command -v glow &>/dev/null; then
     echo "$output" | glow -p -
   else

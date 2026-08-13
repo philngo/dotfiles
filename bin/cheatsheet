@@ -33,9 +33,14 @@ module_enabled() {
 
 display_order=(core git jj nvim wezterm wm tools ai)
 
-echo "# Personal Cheatsheet"
-echo ""
-echo "View with: \`cs\` or \`cheatsheet\`"
+filter_module="${1:-}"
+if [ -n "$filter_module" ]; then
+    echo "# Cheatsheet: ${filter_module}"
+else
+    echo "# Personal Cheatsheet"
+    echo ""
+    echo "View with: \`cs\` or \`cheatsheet\`"
+fi
 echo ""
 echo "| Key | Description |"
 echo "| --- | --- |"
@@ -101,6 +106,7 @@ render_yaml() {
 collected_notes=()
 
 for mod in "${display_order[@]}"; do
+    [ -n "$filter_module" ] && [ "$mod" != "$filter_module" ] && continue
     module_enabled "$mod" || continue
     yaml="$CS_DIR/${mod}.yaml"
     [ -f "$yaml" ] || continue
