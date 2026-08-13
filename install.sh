@@ -272,6 +272,10 @@ if module_enabled "ai"; then
         safe_link "$file" "$HOME/.claude/$filename" ".claude/$filename"
     done
 
+    # Symlink the status line script referenced by settings.json
+    safe_link "$DOTFILES_DIR/claude/statusline-command.sh" \
+        "$HOME/.claude/statusline-command.sh" ".claude/statusline-command.sh"
+
     # Symlink Claude agents
     if [ -d "$DOTFILES_DIR/claude/agents" ]; then
         mkdir -p "$HOME/.claude/agents"
