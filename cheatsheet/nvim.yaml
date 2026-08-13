@@ -99,6 +99,21 @@ sections:
       - key: "`gb{motion}`"
         desc: "Toggle block comment"
 
+  - title: "Neovim — Git (gitsigns)"
+    entries:
+      - key: "`]h` / `[h`"
+        desc: "Next / prev hunk"
+      - key: "`,hp`"
+        desc: "Preview hunk"
+      - key: "`,hb`"
+        desc: "Blame line"
+      - key: "`,hd`"
+        desc: "Diff this file"
+      - key: "`,hs`"
+        desc: "Stage hunk (normal or visual)"
+      - key: "`,hr`"
+        desc: "Reset hunk (normal or visual)"
+
   - title: "Neovim — Config"
     entries:
       - key: "`,v`"

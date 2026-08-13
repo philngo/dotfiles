@@ -169,6 +169,20 @@ return {
           topdelete = { text = "‾" },
           changedelete = { text = "~" },
         },
+        on_attach = function(bufnr)
+          local gs = require("gitsigns")
+          local function map(mode, l, r, desc)
+            vim.keymap.set(mode, l, r, { buffer = bufnr, desc = desc })
+          end
+
+          map("n", "]h", gs.next_hunk, "Next hunk")
+          map("n", "[h", gs.prev_hunk, "Prev hunk")
+          map("n", "<leader>hp", gs.preview_hunk, "Preview hunk")
+          map("n", "<leader>hb", gs.blame_line, "Blame line")
+          map("n", "<leader>hd", gs.diffthis, "Diff this file")
+          map({ "n", "v" }, "<leader>hs", gs.stage_hunk, "Stage hunk")
+          map({ "n", "v" }, "<leader>hr", gs.reset_hunk, "Reset hunk")
+        end,
       })
     end,
   },

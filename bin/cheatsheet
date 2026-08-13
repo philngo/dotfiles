@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Compile per-module cheatsheet YAML files into a markdown table.
 # Called by the `cs` / `cheatsheet` shell function.
+# Usage: cheatsheet [filter]
+#   filter matches module name prefix, section title (substring), or key prefix (case-insensitive)
 set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -29,13 +31,98 @@ module_enabled() {
     return 1
 }
 
-# --- Compile YAML to markdown ---
+# --- Collect all entries ---
 
 display_order=(core git jj nvim wezterm wm tools ai)
 
-filter_module="${1:-}"
-if [ -n "$filter_module" ]; then
-    echo "# Cheatsheet: ${filter_module}"
+# Parallel arrays: one slot per entry
+entry_modules=()
+entry_sections=()
+entry_keys=()
+entry_descs=()
+collected_notes=()
+
+collect_yaml() {
+    local file="$1"
+    local mod="$2"
+    local in_sections=false
+    local in_entries=false
+    local current_section=""
+    local current_key=""
+    local in_notes=false
+
+    while IFS= read -r line; do
+        line="${line%"${line##*[![:space:]]}"}"
+
+        if [[ "$line" == "sections:" ]]; then
+            in_sections=true; in_notes=false; continue
+        fi
+        if [[ "$line" == "notes:" ]]; then
+            in_notes=true; in_sections=false; in_entries=false; continue
+        fi
+
+        if $in_notes && [[ "$line" =~ ^[[:space:]]*-[[:space:]]*(\"(.*)\"|\x27(.*)\x27|(.+))$ ]]; then
+            local note="${BASH_REMATCH[2]:-${BASH_REMATCH[3]:-${BASH_REMATCH[4]}}}"
+            collected_notes+=("$note")
+            continue
+        fi
+
+        if $in_sections && [[ "$line" =~ ^[[:space:]]*-[[:space:]]*title:[[:space:]]*(\"(.*)\"|\x27(.*)\x27|(.+))$ ]]; then
+            current_section="${BASH_REMATCH[2]:-${BASH_REMATCH[3]:-${BASH_REMATCH[4]}}}"
+            in_entries=false
+            continue
+        fi
+
+        if $in_sections && [[ "$line" =~ ^[[:space:]]*entries: ]]; then
+            in_entries=true; continue
+        fi
+
+        if $in_entries && [[ "$line" =~ ^[[:space:]]*-[[:space:]]*key:[[:space:]]*(\"(.*)\"|\x27(.*)\x27|(.+))$ ]]; then
+            current_key="${BASH_REMATCH[2]:-${BASH_REMATCH[3]:-${BASH_REMATCH[4]}}}"
+            continue
+        fi
+
+        if $in_entries && [[ "$line" =~ ^[[:space:]]*desc:[[:space:]]*(\"(.*)\"|\x27(.*)\x27|(.+))$ ]]; then
+            local desc="${BASH_REMATCH[2]:-${BASH_REMATCH[3]:-${BASH_REMATCH[4]}}}"
+            entry_modules+=("$mod")
+            entry_sections+=("$current_section")
+            entry_keys+=("$current_key")
+            entry_descs+=("$desc")
+            current_key=""
+            continue
+        fi
+    done < "$file"
+}
+
+for mod in "${display_order[@]}"; do
+    module_enabled "$mod" || continue
+    yaml="$CS_DIR/${mod}.yaml"
+    [ -f "$yaml" ] || continue
+    collect_yaml "$yaml" "$mod"
+done
+
+# --- Filter and render ---
+
+filter="${1:-}"
+filter_lower="${filter,,}"
+
+entry_matches() {
+    local mod="${1,,}"
+    local section="${2,,}"
+    local key="$3"
+    # Strip backticks and leading punctuation for key matching
+    local key_stripped="${key//\`/}"
+    key_stripped="${key_stripped#"${key_stripped%%[a-zA-Z0-9<]*}"}"
+    local key_lower="${key_stripped,,}"
+
+    [[ "$mod" == "$filter_lower"* ]] && return 0
+    [[ "$section" == *"$filter_lower"* ]] && return 0
+    [[ "$key_lower" == "$filter_lower"* ]] && return 0
+    return 1
+}
+
+if [ -n "$filter" ]; then
+    echo "# Cheatsheet: ${filter}"
 else
     echo "# Personal Cheatsheet"
     echo ""
@@ -45,75 +132,24 @@ echo ""
 echo "| Key | Description |"
 echo "| --- | --- |"
 
-# Simple YAML parser — handles our flat structure without yq.
-# Reads sections[].title, sections[].entries[].key/desc, and notes[].
-render_yaml() {
-    local file="$1"
-    local in_sections=false
-    local in_entries=false
-    local current_title=""
-    local current_key=""
-    local in_notes=false
+prev_section=""
+for i in "${!entry_keys[@]}"; do
+    mod="${entry_modules[$i]}"
+    section="${entry_sections[$i]}"
+    key="${entry_keys[$i]}"
+    desc="${entry_descs[$i]}"
 
-    while IFS= read -r line; do
-        # Strip trailing whitespace/CR
-        line="${line%"${line##*[![:space:]]}"}"
+    if [ -n "$filter" ] && ! entry_matches "$mod" "$section" "$key"; then
+        continue
+    fi
 
-        # Top-level keys
-        if [[ "$line" == "sections:" ]]; then
-            in_sections=true; in_notes=false; continue
-        fi
-        if [[ "$line" == "notes:" ]]; then
-            in_notes=true; in_sections=false; in_entries=false; continue
-        fi
-
-        # Notes entries (  - "...")
-        if $in_notes && [[ "$line" =~ ^[[:space:]]*-[[:space:]]*(\"(.*)\"|\x27(.*)\x27|(.+))$ ]]; then
-            local note="${BASH_REMATCH[2]:-${BASH_REMATCH[3]:-${BASH_REMATCH[4]}}}"
-            collected_notes+=("$note")
-            continue
-        fi
-
-        # Section title (  - title: "...")
-        if $in_sections && [[ "$line" =~ ^[[:space:]]*-[[:space:]]*title:[[:space:]]*(\"(.*)\"|\x27(.*)\x27|(.+))$ ]]; then
-            current_title="${BASH_REMATCH[2]:-${BASH_REMATCH[3]:-${BASH_REMATCH[4]}}}"
-            echo "| **${current_title}** | |"
-            in_entries=false
-            continue
-        fi
-
-        # entries: key
-        if $in_sections && [[ "$line" =~ ^[[:space:]]*entries: ]]; then
-            in_entries=true; continue
-        fi
-
-        # Entry key (      - key: "...")
-        if $in_entries && [[ "$line" =~ ^[[:space:]]*-[[:space:]]*key:[[:space:]]*(\"(.*)\"|\x27(.*)\x27|(.+))$ ]]; then
-            current_key="${BASH_REMATCH[2]:-${BASH_REMATCH[3]:-${BASH_REMATCH[4]}}}"
-            continue
-        fi
-
-        # Entry desc (        desc: "...")
-        if $in_entries && [[ "$line" =~ ^[[:space:]]*desc:[[:space:]]*(\"(.*)\"|\x27(.*)\x27|(.+))$ ]]; then
-            local desc="${BASH_REMATCH[2]:-${BASH_REMATCH[3]:-${BASH_REMATCH[4]}}}"
-            echo "| ${current_key} | ${desc} |"
-            current_key=""
-            continue
-        fi
-    done < "$file"
-}
-
-collected_notes=()
-
-for mod in "${display_order[@]}"; do
-    [ -n "$filter_module" ] && [ "$mod" != "$filter_module" ] && continue
-    module_enabled "$mod" || continue
-    yaml="$CS_DIR/${mod}.yaml"
-    [ -f "$yaml" ] || continue
-    render_yaml "$yaml"
+    if [ "$section" != "$prev_section" ]; then
+        echo "| **${section}** | |"
+        prev_section="$section"
+    fi
+    echo "| ${key} | ${desc} |"
 done
 
-# Print notes at the end
 if [ ${#collected_notes[@]} -gt 0 ]; then
     echo ""
     for note in "${collected_notes[@]}"; do
