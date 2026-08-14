@@ -2,7 +2,7 @@
 
 # Jujutsu/Git prompt via jj-starship (unified replacement for built-in git modules)
 [custom.jj]
-when = "jj-starship detect"
+when = 'p="$PWD"; while [ "$p" != "/" ]; do [ -d "$p/.jj" ] && exit 0; p="${p%/*}"; done; exit 1'
 shell = ["jj-starship"]
 format = "$output "
 
