@@ -282,6 +282,9 @@ config.keys = {
 
 	-- Quit
 	{ key = "q", mods = "CMD", action = act.QuitApplication },
+
+	-- Shift+Enter: send CSI u encoded sequence so TUI apps (e.g. Claude Code) can distinguish it from plain Enter
+	{ key = "Enter", mods = "SHIFT", action = act.SendString("\x1b[13;2u") },
 }
 
 return config
