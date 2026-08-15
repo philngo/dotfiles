@@ -187,13 +187,6 @@ return {
     end,
   },
 
-  -- Commenting
-  {
-    "numToStr/Comment.nvim",
-    config = function()
-      require("Comment").setup()
-    end,
-  },
 
   -- Mason for installing LSP servers
   {
