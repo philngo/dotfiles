@@ -276,6 +276,26 @@ if module_enabled "ai"; then
     safe_link "$DOTFILES_DIR/claude/statusline-command.sh" \
         "$HOME/.claude/statusline-command.sh" ".claude/statusline-command.sh"
 
+    # Symlink Claude skills
+    if [ -d "$DOTFILES_DIR/claude/skills" ]; then
+        mkdir -p "$HOME/.claude/skills"
+
+        # Clean stale skill symlinks
+        for existing in "$HOME"/.claude/skills/*; do
+            [ -L "$existing" ] || continue
+            link_target=$(readlink "$existing")
+            if [[ "$link_target" == "$DOTFILES_DIR/claude/skills/"* ]]; then
+                rm "$existing"
+            fi
+        done
+
+        for file in "$DOTFILES_DIR"/claude/skills/*; do
+            [ -e "$file" ] || continue
+            filename=$(basename "$file")
+            safe_link "$file" "$HOME/.claude/skills/$filename" ".claude/skills/$filename"
+        done
+    fi
+
     # Symlink Claude agents
     if [ -d "$DOTFILES_DIR/claude/agents" ]; then
         mkdir -p "$HOME/.claude/agents"
