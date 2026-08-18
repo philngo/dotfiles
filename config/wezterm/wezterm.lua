@@ -130,24 +130,43 @@ local jj_path = (function()
 	return nil
 end)()
 
--- Get the nearest ancestor bookmark for a jj workspace directory.
--- Uses cd + jj (not -R) so jj traverses up from subdirectories to find the repo root.
-local function get_nearest_bookmark(cwd)
+-- Run a jj log query in the given directory, return trimmed output or nil.
+-- Uses cd (not -R) so jj traverses up from subdirectories to find the repo root.
+local function jj_query(cwd, revset, template)
 	if not jj_path then return nil end
 	local cmd = string.format(
 		"cd %q && %q log -r %q --no-graph --ignore-working-copy -T %q --limit 1",
-		cwd,
-		jj_path,
-		"heads(ancestors(@) & bookmarks())",
-		'bookmarks.join(", ")'
+		cwd, jj_path, revset, template
 	)
 	local ok, stdout, _ = wezterm.run_child_process({ "/bin/bash", "-c", cmd })
 	if ok and stdout then
 		local result = stdout:gsub("%s+$", "")
-		if #result > 0 then
-			return result
-		end
+		if #result > 0 then return result end
 	end
+	return nil
+end
+
+-- Get VCS context for a project directory.
+-- Cascade: jj bookmark → jj commit description → git branch
+local function get_vcs_context(cwd)
+	-- jj: bookmark on @- or @ (covers both "@ is empty" and mid-work cases)
+	local ctx = jj_query(cwd, "@-", 'bookmarks.join(", ")')
+		or jj_query(cwd, "@", 'bookmarks.join(", ")')
+	if ctx then return ctx end
+
+	-- jj: description of unbookmarked work
+	ctx = jj_query(cwd, "@-", "description.first_line()")
+		or jj_query(cwd, "@", "description.first_line()")
+	if ctx then return ctx end
+
+	-- Git fallback: current branch name
+	local cmd = string.format("cd %q && git branch --show-current 2>/dev/null", cwd)
+	local ok, stdout, _ = wezterm.run_child_process({ "/bin/bash", "-c", cmd })
+	if ok and stdout then
+		local result = stdout:gsub("%s+$", "")
+		if #result > 0 then return result end
+	end
+
 	return nil
 end
 
@@ -167,12 +186,21 @@ local function project_selector()
 		end
 	end
 
+	-- Collect VCS context and compute max label width for alignment
+	local contexts = {}
+	local max_label_len = 0
+	for i, project in ipairs(projects) do
+		contexts[i] = get_vcs_context(project.cwd)
+		if contexts[i] and #project.label > max_label_len then
+			max_label_len = #project.label
+		end
+	end
+
 	local choices = {}
-	for _, project in ipairs(projects) do
+	for i, project in ipairs(projects) do
 		local label = project.label
-		local bookmark = get_nearest_bookmark(project.cwd)
-		if bookmark then
-			label = label .. " — " .. bookmark
+		if contexts[i] then
+			label = label .. string.rep(" ", max_label_len - #label) .. " — " .. contexts[i]
 		end
 		table.insert(choices, {
 			id = project.id,
