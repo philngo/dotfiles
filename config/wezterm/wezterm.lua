@@ -130,17 +130,18 @@ local jj_path = (function()
 	return nil
 end)()
 
--- Get the nearest ancestor bookmark for a jj workspace directory
+-- Get the nearest ancestor bookmark for a jj workspace directory.
+-- Uses cd + jj (not -R) so jj traverses up from subdirectories to find the repo root.
 local function get_nearest_bookmark(cwd)
 	if not jj_path then return nil end
-	local ok, stdout, _ = wezterm.run_child_process({
-		jj_path, "log",
-		"-R", cwd,
-		"-r", "heads(ancestors(@) & bookmarks())",
-		"--no-graph", "--ignore-working-copy",
-		"-T", 'bookmarks.join(", ")',
-		"--limit", "1",
-	})
+	local cmd = string.format(
+		"cd %q && %q log -r %q --no-graph --ignore-working-copy -T %q --limit 1",
+		cwd,
+		jj_path,
+		"heads(ancestors(@) & bookmarks())",
+		'bookmarks.join(", ")'
+	)
+	local ok, stdout, _ = wezterm.run_child_process({ "/bin/bash", "-c", cmd })
 	if ok and stdout then
 		local result = stdout:gsub("%s+$", "")
 		if #result > 0 then
