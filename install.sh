@@ -74,7 +74,7 @@ safe_link() {
         echo "  Backing up existing $target to $target.backup"
         mv "$target" "$target.backup"
     fi
-    ln -sf "$src" "$target"
+    ln -sfn "$src" "$target"
     echo "  Linked $label"
 }
 
@@ -112,7 +112,7 @@ if [ -f "$DOTFILES_DIR/brew/local.Brewfile" ]; then
     cat "$DOTFILES_DIR/brew/local.Brewfile" >> "$tmpfile"
 fi
 if [ -s "$tmpfile" ]; then
-    brew bundle --file="$tmpfile"
+    brew bundle --file="$tmpfile" || echo "Warning: brew bundle exited with errors (continuing)"
 fi
 rm -f "$tmpfile"
 
@@ -276,11 +276,11 @@ if module_enabled "ai"; then
     safe_link "$DOTFILES_DIR/claude/statusline-command.sh" \
         "$HOME/.claude/statusline-command.sh" ".claude/statusline-command.sh"
 
-    # Symlink Claude skills
+    # Symlink Claude skills (each skill is a directory with SKILL.md inside)
     if [ -d "$DOTFILES_DIR/claude/skills" ]; then
         mkdir -p "$HOME/.claude/skills"
 
-        # Clean stale skill symlinks
+        # Clean stale skill symlinks (directories or old-format files)
         for existing in "$HOME"/.claude/skills/*; do
             [ -L "$existing" ] || continue
             link_target=$(readlink "$existing")
@@ -289,10 +289,10 @@ if module_enabled "ai"; then
             fi
         done
 
-        for file in "$DOTFILES_DIR"/claude/skills/*; do
-            [ -e "$file" ] || continue
-            filename=$(basename "$file")
-            safe_link "$file" "$HOME/.claude/skills/$filename" ".claude/skills/$filename"
+        for skill_dir in "$DOTFILES_DIR"/claude/skills/*/; do
+            [ -d "$skill_dir" ] || continue
+            skill_name=$(basename "$skill_dir")
+            safe_link "$skill_dir" "$HOME/.claude/skills/$skill_name" ".claude/skills/$skill_name"
         done
     fi
 
