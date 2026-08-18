@@ -120,6 +120,36 @@ local function discover_workspaces(project_list)
 	return result
 end
 
+-- Resolve jj binary path (Wezterm may not inherit shell PATH)
+local jj_path = (function()
+	local ok, stdout, _ = wezterm.run_child_process({ "/bin/zsh", "-lc", "which jj" })
+	if ok and stdout then
+		local path = stdout:gsub("%s+$", "")
+		if #path > 0 then return path end
+	end
+	return nil
+end)()
+
+-- Get the nearest ancestor bookmark for a jj workspace directory
+local function get_nearest_bookmark(cwd)
+	if not jj_path then return nil end
+	local ok, stdout, _ = wezterm.run_child_process({
+		jj_path, "log",
+		"-R", cwd,
+		"-r", "heads(ancestors(@) & bookmarks())",
+		"--no-graph", "--ignore-working-copy",
+		"-T", 'bookmarks.join(", ")',
+		"--limit", "1",
+	})
+	if ok and stdout then
+		local result = stdout:gsub("%s+$", "")
+		if #result > 0 then
+			return result
+		end
+	end
+	return nil
+end
+
 -- Project selector
 local function project_selector()
 	local ok, local_projects = pcall(require, "projects")
@@ -138,9 +168,14 @@ local function project_selector()
 
 	local choices = {}
 	for _, project in ipairs(projects) do
+		local label = project.label
+		local bookmark = get_nearest_bookmark(project.cwd)
+		if bookmark then
+			label = label .. " — " .. bookmark
+		end
 		table.insert(choices, {
 			id = project.id,
-			label = project.label,
+			label = label,
 		})
 	end
 
