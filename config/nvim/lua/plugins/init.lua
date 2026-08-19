@@ -11,7 +11,7 @@ return {
         flavour = "mocha",
         integrations = {
           cmp = true,
-          gitsigns = true,
+          mini = { enabled = true },
           nvimtree = true,
           telescope = true,
           treesitter = true,
@@ -166,31 +166,86 @@ return {
     end,
   },
 
-  -- Git signs in gutter
+  -- Diff signs in gutter
+  -- In jj repos (including workspaces), diffs against merge-base with trunk.
+  -- Falls back to built-in git source for non-jj repos.
   {
-    "lewis6991/gitsigns.nvim",
+    "echasnovski/mini.diff",
     config = function()
-      require("gitsigns").setup({
-        signs = {
-          add = { text = "+" },
-          change = { text = "~" },
-          delete = { text = "_" },
-          topdelete = { text = "‾" },
-          changedelete = { text = "~" },
-        },
-        on_attach = function(bufnr)
-          local gs = require("gitsigns")
-          local function map(mode, l, r, desc)
-            vim.keymap.set(mode, l, r, { buffer = bufnr, desc = desc })
-          end
+      local diff = require("mini.diff")
+      local jj_bufs = {}
 
-          map("n", "]h", gs.next_hunk, "Next hunk")
-          map("n", "[h", gs.prev_hunk, "Prev hunk")
-          map("n", "<leader>hp", gs.preview_hunk, "Preview hunk")
-          map("n", "<leader>hb", gs.blame_line, "Blame line")
-          map("n", "<leader>hd", gs.diffthis, "Diff this file")
-          map({ "n", "v" }, "<leader>hs", gs.stage_hunk, "Stage hunk")
-          map({ "n", "v" }, "<leader>hr", gs.reset_hunk, "Reset hunk")
+      -- Set reference text for a jj-tracked buffer
+      local function jj_set_ref(buf_id, root, rel)
+        local ref = vim.fn.system(
+          "cd " .. vim.fn.shellescape(root)
+            .. " && jj file show --no-pager -r 'latest(::@ & ::trunk())' "
+            .. vim.fn.shellescape(rel)
+            .. " 2>/dev/null"
+        )
+        if vim.v.shell_error ~= 0 then ref = "" end
+        pcall(diff.set_ref_text, buf_id, ref)
+      end
+
+      local git_source = diff.gen_source.git()
+
+      diff.setup({
+        source = {
+          name = "jj/git",
+          attach = function(buf_id)
+            local bufname = vim.api.nvim_buf_get_name(buf_id)
+            if bufname == "" then return false end
+
+            -- Try jj: run jj root from the file's directory
+            local buf_dir = vim.fn.fnamemodify(bufname, ":h")
+            local root = vim.fn.system(
+              "cd " .. vim.fn.shellescape(buf_dir) .. " && jj root --no-pager 2>/dev/null"
+            ):gsub("%s+$", "")
+            if vim.v.shell_error == 0 and root ~= "" and vim.startswith(bufname, root) then
+              local rel = bufname:sub(#root + 2)
+              if rel ~= "" then
+                jj_bufs[buf_id] = { root = root, rel = rel }
+                jj_set_ref(buf_id, root, rel)
+                return true
+              end
+            end
+
+            -- Fall back to git
+            return git_source.attach(buf_id)
+          end,
+          detach = function(buf_id)
+            if jj_bufs[buf_id] then
+              jj_bufs[buf_id] = nil
+            else
+              git_source.detach(buf_id)
+            end
+          end,
+        },
+        view = {
+          style = "sign",
+          signs = { add = "+", change = "~", delete = "_" },
+        },
+        mappings = {
+          apply = "<leader>ha",
+          reset = "<leader>hr",
+          textobject = "gh",
+          goto_first = "[H",
+          goto_prev = "[h",
+          goto_next = "]h",
+          goto_last = "]H",
+        },
+      })
+
+      -- Refresh jj reference text on focus (picks up jj new/squash/rebase)
+      vim.api.nvim_create_autocmd("FocusGained", {
+        callback = function()
+          for buf_id, info in pairs(jj_bufs) do
+            if vim.api.nvim_buf_is_valid(buf_id) then
+              jj_set_ref(buf_id, info.root, info.rel)
+            else
+              jj_bufs[buf_id] = nil
+            end
+          end
         end,
       })
     end,
