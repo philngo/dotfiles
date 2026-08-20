@@ -28,7 +28,7 @@ sections:
         desc: "Go to references"
       - key: "`:%bd`"
         desc: "Close all buffers"
-      - key: "`:%bd|e#`"
+      - key: "`:%bd\|e#`"
         desc: "Close all buffers except current"
 
   - title: "Neovim — Search"
