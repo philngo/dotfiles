@@ -26,6 +26,10 @@ sections:
         desc: "Go to implementation"
       - key: "`gr`"
         desc: "Go to references"
+      - key: "`:%bd`"
+        desc: "Close all buffers"
+      - key: "`:%bd|e#`"
+        desc: "Close all buffers except current"
 
   - title: "Neovim — Search"
     entries:
