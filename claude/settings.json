@@ -1,4 +1,12 @@
 {
+  "permissions": {
+    "deny": [
+      "Bash(playwright*)",
+      "Bash(npx playwright*)",
+      "Bash(npx --yes playwright*)",
+      "Bash(npx -y playwright*)"
+    ]
+  },
   "hooks": {
     "Notification": [
       {
