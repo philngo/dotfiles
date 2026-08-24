@@ -5,9 +5,9 @@ description: Prepare the dev environment for a new work session — fetch main, 
 
 ## Context
 
-This is a **jj (Jujutsu)** repository. The primary repo root is `~/dev/Jump/`. Parallel workspaces like `~/dev/Jump-1/`, `~/dev/Jump-2/`, etc. are connected jj workspaces of the same repo — they can compile and run code but do NOT host the dev server.
+This is a **jj (Jujutsu)** repository. The primary repo root is `~/dev/<project>/`. Parallel workspaces like `~/dev/<project>-1/`, `~/dev/<project>-2/`, etc. are connected jj workspaces of the same repo — they can compile and run code but do NOT host the dev server.
 
-Determine which workspace you're in from the working directory path. If it's `~/dev/Jump/` or `~/dev/Jump/api/`, you're in the default workspace. If it's `~/dev/Jump-N/` or `~/dev/Jump-N/api/`, you're in a parallel workspace — note this to the user.
+Determine which workspace you're in from the working directory path. If it's `~/dev/<project>/` or `~/dev/<project>/api/`, you're in the default workspace. If it's `~/dev/<project>-N/` or `~/dev/<project>-N/api/`, you're in a parallel workspace — note this to the user.
 
 ## Steps
 

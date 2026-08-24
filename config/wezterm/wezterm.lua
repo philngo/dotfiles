@@ -95,7 +95,7 @@ local base_projects = {
 -- Auto-discover jj workspace directories (sibling dirs like project-1, project-2)
 -- If a project has a `root` field (repo root differs from cwd), the suffix is
 -- appended to root and the relative subdir is preserved:
---   root=~/dev/Jump, cwd=~/dev/Jump/api → discovers ~/dev/Jump-1/api
+--   root=~/dev/project, cwd=~/dev/project/api → discovers ~/dev/project-1/api
 local function discover_workspaces(project_list)
 	local result = {}
 	for _, p in ipairs(project_list) do
