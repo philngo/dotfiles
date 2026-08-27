@@ -147,14 +147,20 @@ local function jj_query(cwd, revset, template)
 end
 
 -- Get VCS context for a project directory.
--- Cascade: jj bookmark → jj commit description → git branch
+-- Cascade: jj bookmark → trunk detection → jj commit description → git branch
 local function get_vcs_context(cwd)
 	-- jj: bookmark on @- or @ (covers both "@ is empty" and mid-work cases)
 	local ctx = jj_query(cwd, "@-", 'bookmarks.join(", ")')
 		or jj_query(cwd, "@", 'bookmarks.join(", ")')
 	if ctx then return ctx end
 
-	-- jj: description of unbookmarked work
+	-- jj: if @- is an ancestor of trunk (e.g. main moved after fetch),
+	-- show the trunk bookmark name instead of a stale commit description
+	if jj_query(cwd, "@- & ::trunk()", "change_id.short()") then
+		return jj_query(cwd, "trunk()", 'bookmarks.join(", ")') or "main"
+	end
+
+	-- jj: description of unbookmarked work (not on trunk, so it's ours)
 	ctx = jj_query(cwd, "@-", "description.first_line()")
 		or jj_query(cwd, "@", "description.first_line()")
 	if ctx then return ctx end
