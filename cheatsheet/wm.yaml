@@ -48,6 +48,13 @@ sections:
       - key: "`Alt-Cmd-Ctrl-1`"
         desc: "Move all windows to workspace 1 and flatten"
 
+  - title: "JankyBorders"
+    entries:
+      - key: "`jb-off`"
+        desc: "Kill borders"
+      - key: "`jb-on`"
+        desc: "Restart borders"
+
   - title: "AeroSpace — Service Mode"
     entries:
       - key: "`Alt-Shift-;` or `Alt-Shift-r`"
