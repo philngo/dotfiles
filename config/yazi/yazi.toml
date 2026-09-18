@@ -13,7 +13,3 @@ prepend_previewers = [
   { url = "*.md", run = "glow" },
 ]
 
-[opener]
-edit = [
-  { run = 'nvim "$@"', block = true, for = "unix" },
-]
