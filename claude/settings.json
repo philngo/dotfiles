@@ -1,5 +1,13 @@
 {
   "permissions": {
+    "allow": [
+      "mcp__devhub__run_query",
+      "mcp__devhub__list_databases",
+      "mcp__devhub__search_schema",
+      "mcp__devhub__get_database_schema",
+      "mcp__devhub__get_query_result",
+      "mcp__devhub__query_history"
+    ],
     "deny": [
       "Bash(playwright*)",
       "Bash(npx playwright*)",
