@@ -9,19 +9,20 @@ description: Use when the user wants to create a GitHub pull request from the cu
 
 1. **Verify the working copy.** Run `jj status` — `@` must have changes and a description. If empty or undescribed, stop and ask.
 
-2. **Ensure a bookmark exists on `@`.** Run `jj bookmark list -r @`. If none, ask the user what to name it, then `jj bookmark create <name> -r @`. The bookmark name **must** start with `philngo/` (e.g. `philngo/fix-pagination`). If the user suggests a name without the prefix, prepend it automatically.
+2. **Ensure a bookmark exists on `@`.** Run `jj bookmark list -r @`. If none, pick a short, descriptive kebab-case name yourself (don't ask), then `jj bookmark create <name> -r @`. The bookmark name **must** start with `philngo/` (e.g. `philngo/fix-pagination`). If the user suggests a name without the prefix, prepend it automatically.
 
 3. **Push the bookmark.** `jj git push --bookmark <name>`
 
 4. **Find the repo root** (where `.git/` lives — may differ from cwd in secondary jj workspaces). Use `jj workspace root` to get the workspace root, then walk up until you find `.git/`. Fallback: `jj --config='revsets.short-prefixes=""' log -r @ --no-graph -T 'empty'` works from anywhere, but `gh` needs the `.git/` directory.
 
-5. **Create the PR.** From the directory containing `.git/`:
+5. **Create the PR.** Build the body from `<repo_root>/.github/pull_request_template.md` (see "PR body" below), write it to a scratch file, then from the directory containing `.git/`:
    ```sh
    gh pr create \
+     --draft \
      --base main \
      --head <bookmark> \
      --title "<jj description of @>" \
-     --body-file <repo_root>/.github/pull_request_template.md
+     --body-file <scratch_body_file>
    ```
 
 6. **Clean up.** `jj new` so the working copy is empty.
@@ -45,9 +46,28 @@ description: Use when the user wants to create a GitHub pull request from the cu
 
 10. **Code review.** Once lints and CI are green, invoke `/code-review` on the PR and report findings.
 
+## PR body
+
+Start from the repo's `pull_request_template.md`, verbatim. Only two changes are allowed:
+
+1. **A `From Claude:` block in the first section** (`What & Why` in Jump). Leave a blank line at the top of the section for Phil to write his own context above it, then:
+   ```markdown
+   ## 👩‍🔬 What & Why
+
+   **From Claude:**
+   > <what changed and why, plus anything a reviewer must know: prod steps, ordering, risks>
+   >
+   > - <bullets are quoted too>
+   ```
+   Quote everything after `**From Claude:**` with `>`, including blank lines between paragraphs (a bare `>`), so it reads as a block apart from Phil's text. Keep it short and factual. Phil adds his context above it.
+2. **The Linear ticket link** in the Links section, if one applies.
+
+Every other section stays exactly as in the template: no filled-in testing checkboxes, no images, no edits to reminders.
+
 ## Rules
 
-- **Never write a custom PR body.** Always use `--body-file` with the repo's `pull_request_template.md`. Leave all placeholders empty for the user to fill in.
+- **Never write a custom PR body.** Use the template as described in "PR body". The only additions are the `From Claude:` block and a Linear link.
+- **Always create PRs as drafts.**
 - **PR title** = the jj revision description verbatim.
 - **`gh` must run from the `.git/` directory**, not from a secondary workspace or subdirectory without `.git/`.
 - **Never add lint skip comments** (`# credo:disable-for-*`, `# nosec`, `# noinspection`, etc.) to suppress warnings. Fix the underlying issue instead.
