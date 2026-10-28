@@ -112,6 +112,12 @@ if [ -f "$DOTFILES_DIR/brew/local.Brewfile" ]; then
     cat "$DOTFILES_DIR/brew/local.Brewfile" >> "$tmpfile"
 fi
 if [ -s "$tmpfile" ]; then
+    # Homebrew 7+ refuses to load third-party tap formulae until the tap is trusted
+    if brew trust --help &> /dev/null; then
+        while read -r tap; do
+            brew trust --quiet --tap "$tap"
+        done < <(sed -n 's/^tap "\([^"]*\)".*/\1/p' "$tmpfile" | sort -u)
+    fi
     brew bundle --file="$tmpfile" || echo "Warning: brew bundle exited with errors (continuing)"
 fi
 rm -f "$tmpfile"
