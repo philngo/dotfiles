@@ -1,0 +1,4 @@
+interface:
+  display_name: "Learn"
+  short_description: "Research a topic deeply, then teach it to you"
+  default_prompt: "Use $learn to research and teach me about <topic>."

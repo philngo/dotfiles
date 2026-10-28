@@ -354,6 +354,30 @@ if module_enabled "ai"; then
     fi
 fi
 
+# --- Shared agent skills (Agent Skills standard: Claude Code, Codex, etc.) ---
+
+if module_enabled "ai" && [ -d "$DOTFILES_DIR/skills" ]; then
+    echo "Symlinking shared agent skills..."
+    for skills_home in "$HOME/.claude/skills" "$HOME/.agents/skills"; do
+        mkdir -p "$skills_home"
+
+        # Clean stale shared skill symlinks
+        for existing in "$skills_home"/*; do
+            [ -L "$existing" ] || continue
+            link_target=$(readlink "$existing")
+            if [[ "$link_target" == "$DOTFILES_DIR/skills/"* ]]; then
+                rm "$existing"
+            fi
+        done
+
+        for skill_dir in "$DOTFILES_DIR"/skills/*/; do
+            [ -d "$skill_dir" ] || continue
+            skill_name=$(basename "$skill_dir")
+            safe_link "$skill_dir" "$skills_home/$skill_name" "${skills_home#"$HOME"/}/$skill_name"
+        done
+    done
+fi
+
 # --- iTerm2 dynamic profiles ---
 
 if module_enabled "iterm" && [ -d "$DOTFILES_DIR/iterm" ]; then

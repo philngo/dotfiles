@@ -22,7 +22,7 @@ ya pkg install            # Install yazi plugins from config/yazi/package.toml
 
 **Symlink-based, no stow.** `install.sh` symlinks `home/*` to `~/` and recursively symlinks individual files in `config/*` to `~/.config/` (not whole directories, to avoid clobbering unmanaged files). Files are filtered by module ownership.
 
-**Tool-specific managed directories:** `install.sh` also symlinks Claude files from `claude/` into `~/.claude/` (including module-specific rules from `claude/rules/`), Codex guidance from `codex/AGENTS.md` into `~/.codex/AGENTS.md`, Codex skills from `codex/skills/` into `~/.codex/skills/`, and iTerm2 profiles from `iterm/` into iTerm's DynamicProfiles directory.
+**Tool-specific managed directories:** `install.sh` also symlinks Claude files from `claude/` into `~/.claude/` (including module-specific rules from `claude/rules/`), Codex guidance from `codex/AGENTS.md` into `~/.codex/AGENTS.md`, Codex skills from `codex/skills/` into `~/.codex/skills/`, shared agent skills from `skills/` into both `~/.claude/skills/` and `~/.agents/skills/`, and iTerm2 profiles from `iterm/` into iTerm's DynamicProfiles directory.
 
 **Layered config pattern:** Base configs are tracked in git. Machine-specific overrides go in `.local` files (git-ignored) with `.local.example` templates provided:
 - `home/.gitconfig` includes `~/.gitconfig.local`
@@ -50,6 +50,7 @@ ya pkg install            # Install yazi plugins from config/yazi/package.toml
 - `claude/agents/` — Claude Code custom agents, symlinked to `~/.claude/agents/`
 - `codex/AGENTS.md` — user-scoped Codex instructions, symlinked to `~/.codex/AGENTS.md`
 - `codex/skills/` — Codex custom skills, symlinked as top-level entries into `~/.codex/skills/`
+- `skills/` — agent-agnostic skills (Agent Skills standard: `SKILL.md` with only `name`/`description` frontmatter, no tool-specific instructions), symlinked into `~/.claude/skills/` and `~/.agents/skills/` (read by Codex and other agents); optional Codex metadata in `agents/openai.yaml`
 - `iterm/` — iTerm2 dynamic profiles, symlinked to `~/Library/Application Support/iTerm2/DynamicProfiles/`
 - `macos/` — macOS defaults script
 
