@@ -11,8 +11,8 @@ show_preview = true
 show_help = false
 
 # Storage
-## local = no sync, just SQLite history on this machine
-sync_address = ""
+## local only: no sync, just SQLite history on this machine
+auto_sync = false
 db_path = "~/.local/share/atuin/history.db"
 
 # History
