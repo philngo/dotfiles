@@ -168,7 +168,8 @@ just a quiz.
 
 **Rule it drives.** Send a brief orientation (problem, core mechanisms, how
 they connect) before the first teaching question. After every prediction,
-state the mechanism, even when the learner got it right.
+close the gap to the full mechanism, unless the learner's answer already
+stated it (see §15 on expertise reversal).
 
 Sources: Mayer, Mathias & Wetzell (2002); Luiten, Ames & Ackerson (1980);
 Richland, Kornell & Kao (2009).
@@ -185,38 +186,131 @@ encoded. This is a design rule inferred from §3 and §7, not a single study.
 earlier in the session. Teach with neutral examples; let the learner bring
 the model to their own work.
 
+## 13. Prompt the learner to construct, but stop before it becomes a grind
+
+**Finding.** In human tutoring of 8th graders, tutor explanations predicted
+only shallow learning; student reflection was the only predictor of deep
+learning. Tutors told to only prompt (no explanations, no feedback) produced
+equal learning and better transfer (41% vs 31%). But on items where students
+failed to construct the answer, told answers were retained better (75% vs
+44%): construction wins only when it succeeds. With LLM tutors, over-
+persistent Socratic questioning was the most common thing human supervisors
+corrected (44% of edits, in a trial where the AI matched human tutors), and a
+Socratic-vs-direct comparison found more engagement but no learning gain and
+lower helpfulness ratings.
+
+**Rule it drives.** Questions by default; after one rescaffold, explain
+directly and check. Never probe a third time.
+
+Sources: Chi, Siler, Jeong, Yamauchi & Hausmann (2001); Eedi & Google
+DeepMind (2025); Blasco & Charisi (2024, abstract only).
+
+## 14. Correct, then make the learner revise
+
+**Finding.** After a wrong inference, a remedial explanation plus a prompt
+to revise one's own answer beat no remedial step (d = 0.57–0.82); the same
+explanation with a generic "engaging" prompt did not help. Explanations
+tailored to a diagnosis of the learner's actual knowledge produced deeper
+understanding and fewer false beliefs than untailored ones. LLM tutors
+frequently reject correct learner answers that differ in form from the
+expected one.
+
+**Rule it drives.** Build corrections from the learner's own answer, then
+ask them to revise it. Before marking an answer wrong, check whether it is
+the right answer in different words.
+
+Sources: Roelle, Müller, Roelle & Berthold (2015); Wittwer, Nückles,
+Landmann & Renkl (2010, abstract only); Gupta et al. (2025).
+
+## 15. Presentation: signal, cut, draw, map — less for experts
+
+**Finding.** Across 591 effects, multimedia principles average g = 0.37;
+words plus diagrams is among the most consistent. Signaling the key point:
+d = 0.38. Seductive details (interesting but irrelevant material): g = −0.33
+across 58 studies, robust in direction. Conversational style helps in short
+sessions (retention d = 0.30, transfer d = 0.54) but not in a four-study
+Czech replication, where learners preferred direct statements. Analogies
+help when the mapping is made explicit and aligned, with attention to where
+it breaks; unsupported analogies are common and weaker. Expertise reversal
+is the main limit: explanations, worked examples and labels that help
+novices become redundant or harmful as knowledge grows.
+
+**Rule it drives.** The checklist in "Writing explanations": lead with the
+mechanism in bold, cut seductive details, diagram structure, map analogies,
+strip examples, be direct, and skip what the learner has shown they know.
+
+Sources: Cromley & Chen (2025, abstract only); Alpizar, Adesope & Wong
+(2020, abstract only); Sundararajan & Adesope (2020, via secondary
+summaries); Ginns, Martin & Marsh (2013, abstract only); Brom et al. (2017);
+Richland & Simms (2015); Kalyuga (2007).
+
+## 16. LLM tutors: answer-giving harms, and learners can't tell
+
+**Finding.** In a ~1,000-student field experiment, unguarded GPT-4 raised
+practice scores 48% and cut later unassisted exam scores 17%; a tutor prompt
+that withheld answers, demanded attempts, and included teacher-written
+solutions removed the harm but produced no gain. A tightly structured AI
+tutor with expert-written solutions beat an active-learning class (0.63 SD)
+in less time. Engineers learning a new library with a general AI assistant
+scored 17% lower on a concept quiz; those who asked conceptual questions
+scored highest. In every study that measured it, learners overestimated how
+much they had learned.
+
+**Rule it drives.** Require an attempt before revealing answers, ground
+answers in fetched sources rather than the model's memory, and never use
+the learner's sense of progress as evidence of learning.
+
+Sources: Bastani et al. (2025); Kestin et al. (2025); Shen & Tamkin (2026);
+Lehmann, Cornelius & Sting (2025).
+
 ## References
 
+- Alpizar, D., Adesope, O. O., & Wong, R. M. (2020). A meta-analysis of signaling principle in multimedia learning environments. *Educational Technology Research and Development, 68*, 2095–2119 (abstract only).
+- Bastani, H., et al. (2025). Generative AI without guardrails can harm learning. *PNAS, 122*(26).
 - Bjork, R. A., Dunlosky, J., & Kornell, N. (2013). Self-regulated learning: Beliefs, techniques, and illusions. *Annual Review of Psychology, 64*, 417–444.
+- Blasco, A., & Charisi, V. (2024). Socratic vs. non-Socratic AI tutoring, randomised study. SSRN 5040921 (abstract only).
+- Brom, C., et al. (2017). Personalization principle replications with Czech learners. *Computers & Education*.
 - Brunmair, M., & Richter, T. (2019). Similarity matters: A meta-analysis of interleaved learning and its moderators. *Psychological Bulletin, 145*(11), 1029–1052.
 - Butler, A. C., & Roediger, H. L. (2008). Feedback enhances the positive effects and reduces the negative effects of multiple-choice testing. *Memory & Cognition, 36*(3), 604–616.
 - Butterfield, B., & Metcalfe, J. (2001). Errors committed with high confidence are hypercorrected. *Journal of Experimental Psychology: Learning, Memory, and Cognition, 27*(6), 1491–1494.
 - Cepeda, N. J., Pashler, H., Vul, E., Wixted, J. T., & Rohrer, D. (2006). Distributed practice in verbal recall tasks: A review and quantitative synthesis. *Psychological Bulletin, 132*(3), 354–380.
 - Chi, M. T. H., Bassok, M., Lewis, M. W., Reimann, P., & Glaser, R. (1989). Self-explanations: How students study and use examples in learning to solve problems. *Cognitive Science, 13*(2), 145–182.
 - Chi, M. T. H., Feltovich, P. J., & Glaser, R. (1981). Categorization and representation of physics problems by experts and novices. *Cognitive Science, 5*(2), 121–152.
+- Chi, M. T. H., Siler, S. A., Jeong, H., Yamauchi, T., & Hausmann, R. G. (2001). Learning from human tutoring. *Cognitive Science, 25*(4), 471–533.
 - Cowan, N. (2001). The magical number 4 in short-term memory. *Behavioral and Brain Sciences, 24*(1), 87–114.
+- Cromley, J. G., & Chen, R. (2025). Meta-analysis of multimedia learning principles. *Educational Research Review, 49*, 100730.
 - Dunlosky, J., Rawson, K. A., Marsh, E. J., Nathan, M. J., & Willingham, D. T. (2013). Improving students' learning with effective learning techniques. *Psychological Science in the Public Interest, 14*(1), 4–58.
+- Eedi & Google DeepMind (2025). Supervised LearnLM tutoring trial. arXiv:2512.23633.
 - Fyfe, E. R., McNeil, N. M., Son, J. Y., & Goldstone, R. L. (2014). Concreteness fading in mathematics and science instruction: A systematic review. *Educational Psychology Review, 26*(1), 9–25.
 - Gentner, D., Loewenstein, J., & Thompson, L. (2003). Learning and transfer: A general role for analogical encoding. *Journal of Educational Psychology, 95*(2), 393–408.
 - Giebl, S., Mena, S., Storm, B. C., Bjork, E. L., & Bjork, R. A. (2021). Answer first or Google first? *Psychology Learning & Teaching, 20*(1), 58–75.
+- Ginns, P., Martin, A. J., & Marsh, H. W. (2013). Designing instructional text in a conversational style: A meta-analysis. *Educational Psychology Review, 25*, 445–472.
+- Gupta, A., et al. (2025). Beyond final answers. *AIED 2025*. arXiv:2503.16460.
 - Haladyna, T. M., Downing, S. M., & Rodriguez, M. C. (2002). A review of multiple-choice item-writing guidelines for classroom assessment. *Applied Measurement in Education, 15*(3), 309–333.
 - Hattie, J., & Timperley, H. (2007). The power of feedback. *Review of Educational Research, 77*(1), 81–112.
 - Kalyuga, S. (2007). Expertise reversal effect and its implications for learner-tailored instruction. *Educational Psychology Review, 19*(4), 509–539.
 - Kalyuga, S., Ayres, P., Chandler, P., & Sweller, J. (2003). The expertise reversal effect. *Educational Psychologist, 38*(1), 23–31.
 - Karpicke, J. D., & Roediger, H. L. (2007). Expanding retrieval practice promotes short-term retention, but equally spaced retrieval enhances long-term retention. *Journal of Experimental Psychology: Learning, Memory, and Cognition, 33*(4), 704–719.
+- Kestin, G., et al. (2025). AI tutoring vs in-class active learning in physics. *Scientific Reports, 15*, 17458.
 - Kornell, N. (2009). Optimising learning using flashcards: Spacing is more effective than cramming. *Applied Cognitive Psychology, 23*(9), 1297–1317.
 - Kornell, N., Hays, M. J., & Bjork, R. A. (2009). Unsuccessful retrieval attempts enhance subsequent learning. *Journal of Experimental Psychology: Learning, Memory, and Cognition, 35*(4), 989–998.
+- Lehmann, M., Cornelius, P. B., & Sting, F. J. (2025). AI meets the classroom: When do large language models harm learning? arXiv:2409.09047.
 - Luiten, J., Ames, W., & Ackerson, G. (1980). A meta-analysis of the effects of advance organizers on learning and retention. *American Educational Research Journal, 17*(2), 211–218.
-- Mayer, R. E., Mathias, A., & Wetzell, K. (2002). Fostering understanding of multimedia messages through pre-training. *Journal of Experimental Psychology: Applied, 8*(3), 147–154.
 - Mayer, R. E., & Chandler, P. (2001). When learning is just a click away: Does simple user interaction foster deeper understanding of multimedia messages? *Journal of Educational Psychology, 93*(2), 390–397.
+- Mayer, R. E., Mathias, A., & Wetzell, K. (2002). Fostering understanding of multimedia messages through pre-training. *Journal of Experimental Psychology: Applied, 8*(3), 147–154.
 - Renkl, A., & Atkinson, R. K. (2003). Structuring the transition from example study to problem solving in cognitive skill acquisition. *Educational Psychologist, 38*(1), 15–22.
+- Richland, L. E., & Simms, N. (2015). Analogy, higher order thinking, and education. *WIREs Cognitive Science, 6*(2), 177–192.
 - Richland, L. E., Kornell, N., & Kao, L. S. (2009). The pretesting effect: Do unsuccessful retrieval attempts enhance learning? *Journal of Experimental Psychology: Applied, 15*(3), 243–257.
 - Roediger, H. L., & Karpicke, J. D. (2006). Test-enhanced learning: Taking memory tests improves long-term retention. *Psychological Science, 17*(3), 249–255.
+- Roelle, J., Müller, C., Roelle, D., & Berthold, K. (2015). Learning from instructional explanations. *PLoS ONE, 10*(4), e0124115.
 - Rohrer, D., & Taylor, K. (2007). The shuffling of mathematics problems improves learning. *Instructional Science, 35*(6), 481–498.
 - Schwartz, D. L., & Bransford, J. D. (1998). A time for telling. *Cognition and Instruction, 16*(4), 475–522.
+- Shen, J. H., & Tamkin, A. (2026). How AI impacts skill formation. arXiv:2601.20245.
 - Shute, V. J. (2008). Focus on formative feedback. *Review of Educational Research, 78*(1), 153–189.
 - Soderstrom, N. C., & Bjork, R. A. (2015). Learning versus performance: An integrative review. *Perspectives on Psychological Science, 10*(2), 176–199.
+- Sundararajan, N., & Adesope, O. (2020). Seductive details meta-analysis. *Educational Psychology Review, 32*, 707–734 (via secondary summaries).
 - Sweller, J., & Cooper, G. A. (1985). The use of worked examples as a substitute for problem solving in learning algebra. *Cognition and Instruction, 2*(1), 59–89.
+- Wittwer, J., Nückles, M., Landmann, N., & Renkl, A. (2010). *Journal of Educational Psychology, 102*, 74–89 (abstract only).
 
 Session design draws on Cat Hicks's
 [learning-opportunities](https://github.com/DrCatHicks/learning-opportunities)
