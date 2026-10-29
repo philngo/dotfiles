@@ -75,6 +75,20 @@ sources (specs, papers, official docs, standard textbooks). If you can run
 parallel subagents, split the research across them; otherwise work through it
 in sequence. Tell the learner research is underway.
 
+**This phase is required, every time.** A source counts only if you fetched
+and read it in this session. These don't count:
+
+- What you already know. Your memory is where misconceptions and stale
+  details come from; checking it against a source is the point.
+- The current session's context: the codebase, a PR, earlier conversation.
+  That shows how this code uses the idea, not how the idea works.
+- A search-result snippet you didn't open.
+
+Skipping research usually feels justified: the topic seems familiar, the
+budget is short, or the session already has plenty of context. None of these
+is a reason to skip. If you can't reach the web, tell the learner before
+teaching that the lesson is unsourced and they should treat it accordingly.
+
 Don't shorten research for short budgets. The budget is the learner's time,
 not yours, and teaching a topic compactly takes more understanding, not less.
 
@@ -106,7 +120,7 @@ of these apply:
   criteria.
 - Two answers at different levels of the same causal chain both fit.
 - The answer depends on an assumption the question doesn't state.
-- You can't point to a source for the answer.
+- You can't point to a source you fetched this session for the answer.
 - Its answer is a conclusion you reached earlier in this session (a review
   finding, a diagnosis) rather than something the topic's sources establish.
 
@@ -118,6 +132,9 @@ learner's map; questions only work once they know what territory they're in.
 - The problem this topic exists to solve, in 1–2 sentences.
 - Each core idea as a one-sentence mechanism, in order, and how they connect.
 - What's left out.
+- A "Sources:" line listing the 2–4 main sources you read, as links. This
+  lets the learner see the research happened; it doesn't count toward the
+  word limit.
 - End with the first question of idea 1.
 
 Keep it under ~150 words. It's a map, not a lecture: name the mechanisms,
@@ -232,5 +249,7 @@ Before sending a teaching message, check it. Fix it if:
 - It asks a question that isn't in the brief.
 - It moves on after "makes sense" without testing.
 - It's the first teaching question and no orientation has been sent.
+- It's the first teaching question and you haven't fetched any sources this
+  session.
 - It leaves a core idea whose mechanism you never stated.
 - Its answer is a conclusion you reached earlier in the session.
