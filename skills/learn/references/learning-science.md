@@ -100,7 +100,9 @@ more and transfer better than those who only read the steps. Experts
 organize knowledge by underlying principles; novices by surface features.
 
 **Rule it drives.** Teach each core idea as a mechanism (cause → effect), and
-make most questions ask *why* or *what would happen if*. Research should
+make most questions ask *why* or *what would happen if*. At wrap-up, the
+learner summarizes first; your summary corrects theirs rather than replacing
+the retrieval. Research should
 look for the few principles the topic follows from, not a list of facts.
 
 Sources: Chi et al. (1989); Chi, Feltovich & Glaser (1981);
@@ -116,6 +118,8 @@ transfer.
 
 **Rule it drives.** For transfer, present a case that shares the deep
 structure but differs on the surface, and ask the learner what carries over.
+When teaching an idea, open with two cases that look alike but behave
+differently, and ask for a prediction before explaining.
 
 Sources: Gentner, Loewenstein & Thompson (2003); Schwartz & Bransford (1998);
 Fyfe, McNeil, Son & Goldstone (2014).

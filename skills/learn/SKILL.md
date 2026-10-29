@@ -62,11 +62,11 @@ only questions whose answers you are certain of.
 Scale this to the budget, because every diagnostic question is time not spent
 teaching:
 
-| Budget | Diagnostic questions |
+| Budget | Starting point |
 |---|---|
-| ≤ 15 min | 0–1. Assume adjacent knowledge from context; correct course as answers come in. |
-| ~30 min | 2–3 |
-| ≥ 60 min | 3–6 |
+| ≤ 15 min | One open question instead of a diagnostic: how comfortable they are with the topic, and what they want covered (or a description of what they want to learn). Correct course as later answers come in. |
+| ~30 min | 2–3 diagnostic questions |
+| ≥ 60 min | 3–6 diagnostic questions |
 
 ### 3. Research
 
@@ -74,6 +74,9 @@ Before teaching anything, research the topic: search the web, read primary
 sources (specs, papers, official docs, standard textbooks). If you can run
 parallel subagents, split the research across them; otherwise work through it
 in sequence. Tell the learner research is underway.
+
+Don't shorten research for short budgets. The budget is the learner's time,
+not yours, and teaching a topic compactly takes more understanding, not less.
 
 Write a lesson brief. Keep it in a scratch file if you can, otherwise in your
 working context. Don't show it to the learner. Fill in this template:
@@ -118,7 +121,9 @@ learner's map; questions only work once they know what territory they're in.
 - End with the first question of idea 1.
 
 Keep it under ~150 words. It's a map, not a lecture: name the mechanisms,
-don't develop them. The questions do the developing.
+don't develop them. The questions do the developing. When the ideas are parts
+of a system that interact (a request path, a lock hierarchy, a pipeline), a
+small ASCII diagram of how they connect can replace the prose.
 
 ### 5. Teach each core idea
 
@@ -128,7 +133,12 @@ Follow the idea's mode:
   step holds. In the next case, leave a step for them to complete.
 - **predict-first:** set up a concrete scenario and ask for a prediction.
   After the answer, whatever it was, state the mechanism that produces the
-  outcome before moving on.
+  outcome before moving on. This is the default mode for most learners.
+
+Where the research turned up two cases that look alike but behave
+differently, open the idea with both side by side and ask which behaves which
+way, and why. The contrast points the learner at the feature that matters
+before you name it.
 
 Before leaving a core idea, the learner must have seen its mechanism stated
 plainly by you at least once, not just reconstructed it piecemeal across
@@ -168,8 +178,13 @@ against your earlier conclusions.
 
 ### 7. Wrap-up
 
-Send one message with:
+First, ask the learner to state each core idea in their own words, as cause →
+effect. One question, no hints.
 
+Then send one message with:
+
+- Corrections to their summary: what was missing, narrower than the real
+  mechanism, or wrong. Confirm what they got right in a line.
 - Each core idea in 1–3 lines, stated as a mechanism.
 - What the learner got wrong, and the corrected model.
 - Edges: where this model stops working, and what was left out.
