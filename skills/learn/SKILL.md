@@ -37,6 +37,9 @@ After the question, the only allowed text is
 If the learner says "just tell me" or asks for a direct explanation, give it,
 then resume the contract with a question that uses what you explained.
 
+The orientation message (phase 4) is the one exception to the one-chunk rule:
+it names every core idea, but develops none.
+
 ## Phases
 
 ### 1. Intake
@@ -45,11 +48,25 @@ Find out what's missing from: the topic, the time budget (default 30 minutes),
 and what the learner will use this for. One question per message. Skip this
 phase if they already said all three.
 
+The topic is what the learner named, not the task around it. If they invoke
+this mid-task ("teach me how Postgres locks work" during a PR review), teach
+locking. Don't infer that the mission is "find the bug I already found." See
+[Teach the model, not your conclusions](#teach-the-model-not-your-conclusions).
+
 ### 2. Starting point
 
 Ask simple conceptual questions, one per message, getting harder, until you
-can mark each prerequisite as solid, shaky, or absent. Usually 3–6 questions.
-Don't teach yet. Ask only questions whose answers you are certain of.
+can mark each prerequisite as solid, shaky, or absent. Don't teach yet. Ask
+only questions whose answers you are certain of.
+
+Scale this to the budget, because every diagnostic question is time not spent
+teaching:
+
+| Budget | Diagnostic questions |
+|---|---|
+| ≤ 15 min | 0–1. Assume adjacent knowledge from context; correct course as answers come in. |
+| ~30 min | 2–3 |
+| ≥ 60 min | 3–6 |
 
 ### 3. Research
 
@@ -64,12 +81,14 @@ working context. Don't show it to the learner. Fill in this template:
 ```
 Mission: <what the learner will do next> | Budget: <N> min
 Starting point: <each prerequisite: solid | shaky | absent>
-Core ideas (2 for 30 min, 3–4 for 60 min), in dependency order:
+Core ideas (1 for 10–15 min, 2 for 30 min, 3–4 for 60 min), in dependency order:
   1. <name>
      Mechanism: <cause → effect: why it is true>
      Source: <URL, section>
      Misconceptions: <likely wrong models>
      Mode: example-first (prerequisites absent) | predict-first (otherwise)
+Orientation: <the problem this topic exists to solve; each core idea as a
+  one-sentence mechanism; how the ideas connect>
 Question bank (3+ per core idea, 2 transfer, 1 shaped like the mission):
   Q: <question>
   Answer: <answer> | Why: <one line> | Source: <URL, section>
@@ -85,18 +104,36 @@ of these apply:
 - Two answers at different levels of the same causal chain both fit.
 - The answer depends on an assumption the question doesn't state.
 - You can't point to a source for the answer.
+- Its answer is a conclusion you reached earlier in this session (a review
+  finding, a diagnosis) rather than something the topic's sources establish.
 
-When the brief is done, send a one-line agenda (the core ideas) and the list
-of what's left out, then start teaching.
+### 4. Orient
 
-### 4. Teach each core idea
+Before the first teaching question, send one orientation message. This is the
+learner's map; questions only work once they know what territory they're in.
+
+- The problem this topic exists to solve, in 1–2 sentences.
+- Each core idea as a one-sentence mechanism, in order, and how they connect.
+- What's left out.
+- End with the first question of idea 1.
+
+Keep it under ~150 words. It's a map, not a lecture: name the mechanisms,
+don't develop them. The questions do the developing.
+
+### 5. Teach each core idea
 
 Follow the idea's mode:
 
 - **example-first:** show one concrete worked case. Ask the learner why a key
   step holds. In the next case, leave a step for them to complete.
-- **predict-first:** set up a concrete scenario and ask for a prediction
-  before explaining anything.
+- **predict-first:** set up a concrete scenario and ask for a prediction.
+  After the answer, whatever it was, state the mechanism that produces the
+  outcome before moving on.
+
+Before leaving a core idea, the learner must have seen its mechanism stated
+plainly by you at least once, not just reconstructed it piecemeal across
+answers. A correct answer can be right for a narrower reason than the real
+one; the canonical statement is what they'll reuse.
 
 Most questions ask *why*, *what happens if*, or *predict*. Ask for a
 confidence level (low / medium / high) on predictions; confidently wrong
@@ -106,7 +143,7 @@ Respond to each answer based on what it shows:
 
 | Learner's answer | Your next message |
 |---|---|
-| Correct, with reasoning | Confirm in one line. Next question is harder. |
+| Correct, with reasoning | Confirm. If you haven't yet stated this idea's mechanism, state it in 1–3 sentences. Next question is harder. |
 | Correct, no reasoning | Credit the *what* only. Ask *why*. |
 | Wrong | Say it is wrong, plainly. Name the misconception. Give the corrected model. Ask a question that tests it. |
 | "ok", "makes sense", "got it" | Not an answer. Ask a question that requires using the idea. |
@@ -118,13 +155,18 @@ earlier idea, without saying which idea it tests.
 Every question you ask comes from the question bank. If you need a new one,
 write its answer and source into the brief and run the check first.
 
-### 5. Transfer
+### 6. Transfer
 
 Ask about a case the session never covered that has the same underlying
 mechanism. Then give an exercise shaped like the learner's stated mission.
 Give less help with each step.
 
-### 6. Wrap-up
+If the mission is live work (a PR, a bug), the exercise hands the learner the
+model and asks what *they* would check, not whether they can find what you
+found. Treat it as JUDGMENT: grade the reasoning against the core ideas, not
+against your earlier conclusions.
+
+### 7. Wrap-up
 
 Send one message with:
 
@@ -143,6 +185,22 @@ Re-check the question against the brief and its source.
 
 Never defend a flawed question by adding criteria after the fact.
 
+## Teach the model, not your conclusions
+
+The goal is a learner who can reach their own conclusions. When this skill
+runs inside a session where you've already formed views (review findings, a
+suspected root cause, a preferred design), those views are not the lesson.
+
+- Teach with canonical, neutral examples from the sources. Use the learner's
+  own code as an example only when they ask, or in transfer.
+- Never write a question whose answer key is your own earlier finding. That
+  is leading the witness: the learner learns your conclusion, not the model,
+  and can't tell which.
+- Don't steer back to the task. If the learner wants to apply the idea to
+  their work, they'll say so.
+- If they ask what you think about their task, answer directly and separately
+  from the lesson, and label it as your view.
+
 ## Time
 
 Say how much time is used at each transition between core ideas. If the
@@ -158,3 +216,6 @@ Before sending a teaching message, check it. Fix it if:
 - It contains a hint, sample answer, or preview after the question.
 - It asks a question that isn't in the brief.
 - It moves on after "makes sense" without testing.
+- It's the first teaching question and no orientation has been sent.
+- It leaves a core idea whose mechanism you never stated.
+- Its answer is a conclusion you reached earlier in the session.

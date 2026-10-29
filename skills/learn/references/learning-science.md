@@ -152,6 +152,35 @@ flawed, say so and withdraw it.
 
 Sources: Haladyna, Downing & Rodriguez (2002).
 
+## 11. Give the map before the territory
+
+**Finding.** Learning the names and behaviour of a system's key components
+before the main lesson improves understanding of how they interact
+(pre-training principle). Advance organizers, a short high-level frame given
+before detailed material, have a small but reliable positive effect on
+learning and retention. Pretesting helps too, but its benefit depends on
+the explanation that follows; a pretest with no subsequent instruction is
+just a quiz.
+
+**Rule it drives.** Send a brief orientation (problem, core mechanisms, how
+they connect) before the first teaching question. After every prediction,
+state the mechanism, even when the learner got it right.
+
+Sources: Mayer, Mathias & Wetzell (2002); Luiten, Ames & Ackerson (1980);
+Richland, Kornell & Kao (2009).
+
+## 12. Leading questions teach the asker's answer
+
+**Finding.** Generation benefits come from the learner constructing the
+answer from their own model. When questions are built to converge on a
+conclusion the tutor already holds, the learner's work shifts from reasoning
+to guessing what the tutor wants, and the tutor's conclusion is what gets
+encoded. This is a design rule inferred from §3 and §7, not a single study.
+
+**Rule it drives.** Don't build the question bank from conclusions reached
+earlier in the session. Teach with neutral examples; let the learner bring
+the model to their own work.
+
 ## References
 
 - Bjork, R. A., Dunlosky, J., & Kornell, N. (2013). Self-regulated learning: Beliefs, techniques, and illusions. *Annual Review of Psychology, 64*, 417–444.
@@ -173,6 +202,8 @@ Sources: Haladyna, Downing & Rodriguez (2002).
 - Karpicke, J. D., & Roediger, H. L. (2007). Expanding retrieval practice promotes short-term retention, but equally spaced retrieval enhances long-term retention. *Journal of Experimental Psychology: Learning, Memory, and Cognition, 33*(4), 704–719.
 - Kornell, N. (2009). Optimising learning using flashcards: Spacing is more effective than cramming. *Applied Cognitive Psychology, 23*(9), 1297–1317.
 - Kornell, N., Hays, M. J., & Bjork, R. A. (2009). Unsuccessful retrieval attempts enhance subsequent learning. *Journal of Experimental Psychology: Learning, Memory, and Cognition, 35*(4), 989–998.
+- Luiten, J., Ames, W., & Ackerson, G. (1980). A meta-analysis of the effects of advance organizers on learning and retention. *American Educational Research Journal, 17*(2), 211–218.
+- Mayer, R. E., Mathias, A., & Wetzell, K. (2002). Fostering understanding of multimedia messages through pre-training. *Journal of Experimental Psychology: Applied, 8*(3), 147–154.
 - Mayer, R. E., & Chandler, P. (2001). When learning is just a click away: Does simple user interaction foster deeper understanding of multimedia messages? *Journal of Educational Psychology, 93*(2), 390–397.
 - Renkl, A., & Atkinson, R. K. (2003). Structuring the transition from example study to problem solving in cognitive skill acquisition. *Educational Psychologist, 38*(1), 15–22.
 - Richland, L. E., Kornell, N., & Kao, L. S. (2009). The pretesting effect: Do unsuccessful retrieval attempts enhance learning? *Journal of Experimental Psychology: Applied, 15*(3), 243–257.
