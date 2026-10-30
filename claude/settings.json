@@ -31,6 +31,7 @@
     "superpowers@claude-plugins-official": true
   },
   "voiceEnabled": false,
+  "promptSuggestionEnabled": false,
   "skipDangerousModePermissionPrompt": true,
   "tui": "fullscreen"
 }
